@@ -6,13 +6,14 @@ cd = credentials.Certificate("habitbotdb-297416-firebase-adminsdk-kn9zk-b63e8c99
 # your private key.
 firebase_admin.initialize_app(cd)
 datab = firestore.client()
-usersref = datab.collection(u'staging')
-doc_ref = datab.collection(u'staging').document(u'user')
-doc_ref.set({
+# usersref = datab.collection(u'staging')
+team_ref = datab.collection(u'staging').document(u'team')
+user_ref = team_ref.collection('users').document('user')
+user_ref.set({
     u'abs': ['Abhijeet','Sneha','Suresh'],
     u'habits': ['Bathe','Sleep'],
 })
-docs = usersref.stream()
+# docs = usersref.stream()
 
-for doc in docs:
-    print('{} : {}'.format(doc.id,doc.to_dict()))
+# for doc in docs:
+#     print('{} : {}'.format(doc.id,doc.to_dict()))

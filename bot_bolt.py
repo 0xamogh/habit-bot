@@ -10,6 +10,16 @@ app = App(
     token=os.environ['SLACK_TOKEN'],
     signing_secret=os.environ['SIGNING_SECRET']
 )
+@app.message("stupid bot")
+def team_info(message, say):
+
+
+    # response = client.team_info(
+    #     token = os.environ['SLACK_TOKEN']
+    # )
+    # channel_id =message['channel']
+    say(text="Not funny he's scolding me 😢😞")
+    # print("response", response)
 
 @app.message("hello")
 def message_hello(message, say):
@@ -51,21 +61,21 @@ def open_modal(ack, body, client):
                 },
                 {
                     "type": "input",
-                    "block_id": "input_c",
+                    "block_id": "habit_block",
                     "label": {"type": "plain_text", "text": "What is the new habit you are looking to build?"},
                     "element": {
                         "type": "plain_text_input",
-                        "action_id": "dreamy_input",
+                        "action_id": "habit_text",
                         "multiline": False
                     }
                 },
                 {
                     "type": "input",
-                    "block_id": "input_d",
+                    "block_id": "timepicker_block",
                     "label": {"type": "plain_text", "text": "When do you want to be reminded about this habit?"},
                     "element": {
                         "type": "timepicker",
-                        "action_id": "timepicker123",
+                        "action_id": "reminder_time",
                         "initial_time": "11:40",
                         "placeholder": {
                         "type": "plain_text",
@@ -75,10 +85,10 @@ def open_modal(ack, body, client):
                 },
                 
                     {"type": "input",
-                    "block_id": "input_e",
+                    "block_id": "abs_block",
                     "label": {"type": "plain_text", "text": "Whom do you want to be accountable to?"},
                     "element": {
-                        "action_id": "text1234",
+                        "action_id": "accountablity_buddies",
                         "type": "multi_users_select",
                         "placeholder": {
                             "type": "plain_text",
@@ -89,6 +99,41 @@ def open_modal(ack, body, client):
             ]
         }
     )
+# Handle a view_submission event
+@app.view("view_1")
+def handle_submission(ack, body, client, view):
+    # Assume there's an input block with `block_c` as the block_id and `dreamy_input`
+    habit_text = view["state"]["values"]["habit_block"]["habit_text"]['value']
+    reminder_time = view["state"]["values"]["timepicker_block"]["reminder_time"]['selected_time']
+    accountablity_buddies = view["state"]["values"]["abs_block"]["accountablity_buddies"]['selected_users']
+    user = body["user"]["id"]
+    # Validate the inputs
+    errors = {}
+    print(habit_text, type(habit_text))
+    print(reminder_time, type(reminder_time))
+    print(accountablity_buddies, type(accountablity_buddies))
+
+    if habit_text is not None and len(habit_text) <= 4:
+        errors["habit_block"] = "The value must be longer than 4 characters"
+    if len(errors) > 0:
+        ack(response_action="errors", errors=errors)
+        return
+    # Acknowledge the view_submission event and close the modal
+    ack()
+    # Do whatever you want with the input data - here we're saving it to a DB
+    # then sending the user a verification of their submission
+
+    # Message to send user
+    msg = ""
+    try:
+        # Save to DB
+        msg = f"Your submission of {habit_text} was successful"
+    except Exception as e:
+        # Handle error
+        msg = "There was an error with your submission"
+    finally:
+        # Message the user
+        client.chat_postMessage(channel=user, text=msg)
 @app.event("app_home_opened")
 def update_home_tab(client, event, logger):
     try:
