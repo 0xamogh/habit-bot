@@ -2,6 +2,11 @@ from dotenv import load_dotenv
 from pathlib import Path
 import os
 from slack_bolt import App
+import firebase_admin
+from firebase_admin import credentials, firestore, db
+from db_utils import create_habit, read_habit, delete_habit, check_if_team_exists
+import json
+from datetime import datetime
 
 env_path = Path('.')/'.env'
 load_dotenv(dotenv_path=env_path)
@@ -10,6 +15,16 @@ app = App(
     token=os.environ['SLACK_TOKEN'],
     signing_secret=os.environ['SIGNING_SECRET']
 )
+cd = credentials.Certificate(
+    "habitbotdb-297416-firebase-adminsdk-kn9zk-b63e8c9960.json")
+
+firebase_admin.initialize_app(
+    cd, {
+    'databaseURL': os.environ['DB_URL']
+    }
+)
+db = db.reference('staging/')
+
 @app.message("stupid bot")
 def team_info(message, say):
 
@@ -92,7 +107,7 @@ def open_modal(ack, body, client):
                         "type": "multi_users_select",
                         "placeholder": {
                             "type": "plain_text",
-                            "text": "Select users"
+                            "text": "View your accountablity buddies"
       }
     }
                 },
@@ -102,22 +117,32 @@ def open_modal(ack, body, client):
 # Handle a view_submission event
 @app.view("view_1")
 def handle_submission(ack, body, client, view):
-    # Assume there's an input block with `block_c` as the block_id and `dreamy_input`
+
     habit_text = view["state"]["values"]["habit_block"]["habit_text"]['value']
     reminder_time = view["state"]["values"]["timepicker_block"]["reminder_time"]['selected_time']
     accountablity_buddies = view["state"]["values"]["abs_block"]["accountablity_buddies"]['selected_users']
     user = body["user"]["id"]
+    
+    
+    team = body['team']['domain']
+    print(team)
+    check_if_team_exists(db, team)
+    team_ref = db.child(team)
     # Validate the inputs
     errors = {}
-    print(habit_text, type(habit_text))
-    print(reminder_time, type(reminder_time))
-    print(accountablity_buddies, type(accountablity_buddies))
+    print(body['token'])
+
 
     if habit_text is not None and len(habit_text) <= 4:
         errors["habit_block"] = "The value must be longer than 4 characters"
     if len(errors) > 0:
         ack(response_action="errors", errors=errors)
         return
+
+    create_habit(team_ref, team, user, habit_text, reminder_time, accountablity_buddies)
+    tz = get_user_timezone(client, user)
+
+    
     # Acknowledge the view_submission event and close the modal
     ack()
     # Do whatever you want with the input data - here we're saving it to a DB
@@ -134,8 +159,22 @@ def handle_submission(ack, body, client, view):
     finally:
         # Message the user
         client.chat_postMessage(channel=user, text=msg)
+
 @app.event("app_home_opened")
 def update_home_tab(client, event, logger):
+    client.chat_scheduleMessage(
+        channel=event['user'],
+        post_at="1607341556",
+        text="Summer has come and passed"
+    )
+    team_info=get_team_info(client)
+    team = team_info['team']['domain']
+    check_if_team_exists(db, team)
+    team_ref = db.child(team)
+    user_data = read_habit(team_ref, team, event["user"])
+    # print(user_data, user_data['habits']
+    #       ['Hahah this finally works']['reminder_time'])
+    my_payload = generate_habit_payload(user_data['habits'])
     try:
         # Call views.publish with the built-in client
         client.views_publish(
@@ -143,28 +182,136 @@ def update_home_tab(client, event, logger):
             user_id=event["user"],
             # Home tabs must be enabled in your app configuration
             view={
-                "type": "home",
-                "blocks": [
-                    {
-                        "type": "section",
-                        "text": {
-                            "type": "mrkdwn",
-                            "text": "*Welcome home, <@" + event["user"] + "> :house:*"
+                "type":"home",
+                
+                    "blocks": [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "plain_text",
+                        				"text": "This is a plain text section block.",
+                                "emoji": True
+                            }
+                        },
+                        {
+                            "type": "divider"
+                        },
+                        {
+                            "type": "header",
+                            "text": {
+                                "type": "plain_text",
+                        				"text": "This is a header block",
+                                "emoji": True
+                            }
+                        },
+                        *my_payload
+                        ,
+                        {
+                            "type": "divider"
+                        },
+                        {
+                            "type": "header",
+                            "text": {
+                                "type": "plain_text",
+                        				"text": "This is a header block",
+                                "emoji": True
+                            }
+                        },
+                        {
+                            "type": "section",
+                            "block_id": "section678",
+                            "text": {
+                                "type": "mrkdwn",
+                        				"text": "Pick users from the list"
+                            },
+                            "accessory": {
+                                "action_id": "text1234",
+                        				"type": "multi_users_select",
+                        				"placeholder": {
+                                                            "type": "plain_text",
+                               					"text": "Select users"
+                                                        }
+                            }
+                        },
+                        {
+                            "type": "divider"
+                        },
+                        {
+                            "type": "actions",
+                            "elements": [
+                                {
+                                    "type": "button",
+                                    "text": {
+                                        "type": "plain_text",
+                                      						"text": "Click Me",
+                                        "emoji": True
+                                    },
+                                    "value": "click_me_123",
+                                    "action_id": "actionId-0"
+                                },
+                                {
+                                    "type": "button",
+                                    "text": {
+                                        "type": "plain_text",
+                                      						"text": "Click Me",
+                                        "emoji": True
+                                    },
+                                    "value": "click_me_123",
+                                    "action_id": "actionId-1"
+                                },
+                                {
+                                    "type": "button",
+                                    "text": {
+                                        "type": "plain_text",
+                                      						"text": "Click Me 👋🏽",
+                                        "emoji": True
+                                    },
+                                    "value": "click_me_123",
+                                    "action_id": "actionId-2"
+                                }
+                            ]
                         }
-                    },
-                    {
-                        "type": "section",
-                        "text": {
-                          "type": "mrkdwn",
-                          "text": "Learn how home tabs can be more useful and interactive <https://api.slack.com/surfaces/tabs/using|*in the documentation*>."
-                        }
-                    }
-                ]
-            }
-        )
-
+                    ]
+                })
     except Exception as e:
         logger.error(f"Error publishing home tab: {e}")
+
+def get_team_info(client):
+    response = client.team_info(
+        token = os.environ['SLACK_TOKEN']
+    )
+    # print(team)
+    return response
+
+def get_user_timezone(client, user_id):
+    user_response = client.users_info(
+        token = os.environ['SLACK_TOKEN'],
+        user=user_id
+    )
+    return user_response['user']['tz']
+
+def generate_habit_payload(habits):
+    habit_names = list(habits.keys())
+    payload = []
+    for habit_name in habit_names:
+        payload.append({
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": habit_name
+            },
+            "accessory": {
+                "type": "button",
+                "text": {
+                        "type": "plain_text",
+                        "text": "Mark started"
+                },
+                "action_id": f"{habit_name}_button"
+            }
+        })
+
+    return payload
+
 
 @app.action('button_click')
 def action_button_click(body, ack, say):
