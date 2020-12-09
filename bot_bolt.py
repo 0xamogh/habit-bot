@@ -6,7 +6,8 @@ import firebase_admin
 from firebase_admin import credentials, firestore, db
 from db_utils import create_habit, read_habit, delete_habit, check_if_team_exists
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
+import pytz
 
 env_path = Path('.')/'.env'
 load_dotenv(dotenv_path=env_path)
@@ -120,6 +121,7 @@ def handle_submission(ack, body, client, view):
 
     habit_text = view["state"]["values"]["habit_block"]["habit_text"]['value']
     reminder_time = view["state"]["values"]["timepicker_block"]["reminder_time"]['selected_time']
+    reminder_hour, reminder_minutes = reminder_time.split(":")
     accountablity_buddies = view["state"]["values"]["abs_block"]["accountablity_buddies"]['selected_users']
     user = body["user"]["id"]
     
@@ -141,8 +143,15 @@ def handle_submission(ack, body, client, view):
 
     create_habit(team_ref, team, user, habit_text, reminder_time, accountablity_buddies)
     tz = get_user_timezone(client, user)
+    local = pytz.timezone(tz)
+    user_time_now = datetime.now().astimezone(tz)
+    scheduled_time = user_time_now.replace(hour=reminder_hour, minute=reminder_minutes)
 
-    
+    if user_time_now.hour < reminder_hour or (user_time_now.hour == reminder_hour and user_time_now.minute < reminder_minutes):
+        schedule_message(client, user, scheduled_time.timestamp(), habit_text)
+    else:
+        schedule_message( client, user, (scheduled_time + timedelta(days=1)).timestamp(), habit_text)
+
     # Acknowledge the view_submission event and close the modal
     ack()
     # Do whatever you want with the input data - here we're saving it to a DB
@@ -160,13 +169,16 @@ def handle_submission(ack, body, client, view):
         # Message the user
         client.chat_postMessage(channel=user, text=msg)
 
+def schedule_message(client, user, unix_timestamp, text):
+    client.chat_scheduleMessage(
+        channel=user,
+        post_at=unix_timestamp,
+        text=text
+    )
+
 @app.event("app_home_opened")
 def update_home_tab(client, event, logger):
-    client.chat_scheduleMessage(
-        channel=event['user'],
-        post_at="1607341556",
-        text="Summer has come and passed"
-    )
+    
     team_info=get_team_info(client)
     team = team_info['team']['domain']
     check_if_team_exists(db, team)
@@ -243,7 +255,7 @@ def update_home_tab(client, event, logger):
                                     "type": "button",
                                     "text": {
                                         "type": "plain_text",
-                                      						"text": "Click Me",
+                                        "text": "Click Me",
                                         "emoji": True
                                     },
                                     "value": "click_me_123",
@@ -304,14 +316,18 @@ def generate_habit_payload(habits):
                 "type": "button",
                 "text": {
                         "type": "plain_text",
-                        "text": "Mark started"
+                        "text": 'Mark as completed' #if True or habits[habit_name]['activity_underway'] else 'Start activity'
                 },
-                "action_id": f"{habit_name}_button"
+                "action_id": "activity_button",
+                "value": habit_name
             }
         })
 
     return payload
-
+    
+@app.action('activity_button')
+def activity_button_click(ack):
+    ack()
 
 @app.action('button_click')
 def action_button_click(body, ack, say):

@@ -32,7 +32,8 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list):
         })
     else:
         habits = team_data[user]['habits']
-        habits[habit_text] = {'reminder_time': reminder_time}
+        habits[habit_text] = {
+            'reminder_time': reminder_time, 'activity_underway': False}
         datab.update(
             {
                 f"{user}/habits": habits,
