@@ -1,30 +1,22 @@
 import firebase_admin
 from firebase_admin import credentials, firestore, db
 cd = credentials.Certificate("habitbotdb-297416-firebase-adminsdk-kn9zk-b63e8c9960.json")
-# In the above line <path_to_generated_private_key>
-# is a placeholder for the generate JSON file containing
-# your private key.
-# firebase_admin.initialize_app(cd, {
-#     'databaseURL': 'https://habitbotdb-297416.firebaseio.com/'
-# })
-# datab = db.reference('staging/team/')
-# print(datab.get())
 
 def create_habit(datab, team, user, habit_text, reminder_time, abs_list):
 
     team_data = datab.get()
     error_status = False
-    print(team_data)
+    # print(team_data)
 
     if user not in team_data.keys():
         print("entering first if statement")
-        datab.set({
+        datab.update({
             user: {
                 "abs": abs_list,
                 "habits":{
                     habit_text: {
                         "reminder_time" : reminder_time,
-                        "activity_underway" : False
+                        "habit_status" : 0
                     }
                 }
             }
@@ -33,7 +25,7 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list):
     else:
         habits = team_data[user]['habits']
         habits[habit_text] = {
-            'reminder_time': reminder_time, 'activity_underway': False}
+            'reminder_time': reminder_time, 'habit_status': 0}
         datab.update(
             {
                 f"{user}/habits": habits,
@@ -42,7 +34,7 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list):
         )
         abs_list = team_data[user]['abs']
 
-def read_habit(datab, team, user, habit_text=None):
+def read_habit(datab, user, habit_text=None):
     team_data = datab.get()
 
     error_status = False
@@ -51,7 +43,34 @@ def read_habit(datab, team, user, habit_text=None):
     if habit_text:
         return team_data[user][habit_text]
     return team_data[user]
+def read_abs_list(datab, user):
+    team_data = datab.get()
 
+    error_status = False
+    if user not in team_data.keys():
+        return []
+    return team_data[user]['abs']
+
+def set_habit_status(datab, user, habit_text, habit_status):
+    team_data = datab.get()
+    habit_status_dict = {
+        'Start Activity':0,
+        'Mark Complete':1,
+        'Completed':2
+    }
+    # print(team_data)
+    error_status = False
+    if user not in team_data.keys():
+        return {"user_not_found" : True}
+    if habit_text:
+        habits = team_data[user]['habits']
+        # print(habit_status)
+        habits[habit_text]['habit_status'] = int((habit_status+1)%3)
+        datab.update(
+            {
+                f"{user}/habits": habits,
+            }
+        )
 def delete_habit(datab,env, team, user, habit_text):
     user_ref = datab.reference(f"{env}/{team}/{user}")
     user_data = user_ref.get()
