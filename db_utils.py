@@ -7,8 +7,8 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list):
     team_data = datab.get()
     error_status = False
     # print(team_data)
-
-    if user not in team_data.keys():
+    # print("habits :", team_data[user]['habits'])
+    if user not in team_data.keys() or 'habits' not in  team_data[user].keys():
         print("entering first if statement")
         datab.update({
             user: {
@@ -17,7 +17,7 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list):
                     habit_text: {
                         "reminder_time" : reminder_time,
                         "habit_status" : 0
-                    }
+                    },
                 }
             }
 
@@ -51,6 +51,11 @@ def read_abs_list(datab, user):
         return []
     return team_data[user]['abs']
 
+def update_abs_list(datab, user, abs_list):
+    datab.update({
+        f"{user}/abs": abs_list
+    })
+
 def set_habit_status(datab, user, habit_text, habit_status):
     team_data = datab.get()
     habit_status_dict = {
@@ -71,22 +76,11 @@ def set_habit_status(datab, user, habit_text, habit_status):
                 f"{user}/habits": habits,
             }
         )
-def delete_habit(datab,env, team, user, habit_text):
-    user_ref = datab.reference(f"{env}/{team}/{user}")
-    user_data = user_ref.get()
-    error_status = False
-    try:
-
-        if habit_text not in user_data:
-            raise Exception("Habit not found")
-        if habit_text:
-            delete_habit_ref = user_ref.child(habit_text)
-            delete_habit_ref.delete()
-
-    except:
-        print("An error has occured")
-    finally:
-        return {'error_status': error_status}
+def delete_habit(datab, user, habit_text):
+    print("deleting habit", habit_text)
+    user_ref = datab.child(user)
+    delete_habit_ref = user_ref.child('habits').child(habit_text)
+    delete_habit_ref.delete()
 
 def check_if_team_exists(db, team):
     db_data = db.get()
