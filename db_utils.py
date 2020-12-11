@@ -6,8 +6,7 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list):
 
     team_data = datab.get()
     error_status = False
-    # print(team_data)
-    # print("habits :", team_data[user]['habits'])
+
     if user not in team_data.keys() or 'habits' not in  team_data[user].keys():
         print("entering first if statement")
         datab.update({
@@ -49,8 +48,10 @@ def read_abs_list(datab, user):
     error_status = False
     if user not in team_data.keys():
         return []
-    return team_data[user]['abs']
-
+    elif 'abs' in team_data[user].keys():
+        return team_data[user]['abs']
+    else:
+        return None
 def update_abs_list(datab, user, abs_list):
     datab.update({
         f"{user}/abs": abs_list
@@ -58,18 +59,12 @@ def update_abs_list(datab, user, abs_list):
 
 def set_habit_status(datab, user, habit_text, habit_status):
     team_data = datab.get()
-    habit_status_dict = {
-        'Start Activity':0,
-        'Mark Complete':1,
-        'Completed':2
-    }
-    # print(team_data)
     error_status = False
     if user not in team_data.keys():
         return {"user_not_found" : True}
     if habit_text:
         habits = team_data[user]['habits']
-        # print(habit_status)
+
         habits[habit_text]['habit_status'] = int((habit_status+1)%3)
         datab.update(
             {
