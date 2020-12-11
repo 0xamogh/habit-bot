@@ -4,6 +4,7 @@ from utils import generate_habit_payload
 import requests
 import random
 import json
+import os
 def build_home_tab_payload(client, db, gif_link, event=None, logger=None, user=None):
     r = requests.get(
         "https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % ("motivation", os.environ['TENOR_TOKEN'], 13))
