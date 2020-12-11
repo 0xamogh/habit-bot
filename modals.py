@@ -136,7 +136,7 @@ def submit_create_habit_modal(ack, body, client, view, db):
         client.chat_postMessage(channel=user, text=msg)
 
 
-def build_delete_habit_payload(ack, body, client, logger, db):
+def build_delete_habit_payload(ack, body, client, db):
     ack()
     team = body['team']['domain']
     user = body['user']['id']
