@@ -1,9 +1,15 @@
 from utils import get_team_info
 from db_utils import check_if_team_exists, read_abs_list, read_habit
 from utils import generate_habit_payload
-
+import requests
+import random
+import json
 def build_home_tab_payload(client, db, gif_link, event=None, logger=None, user=None):
-
+    r = requests.get(
+        "https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % ("motivation", os.environ['TENOR_TOKEN'], 13))
+    my_json = json.loads(r.content)
+    randomizer = random.randint(0, 10)
+    gif_link = my_json['results'][randomizer]['media'][0]['gif']['url']
     team_info = get_team_info(client)
     team = team_info['team']['domain']
     check_if_team_exists(db, team)

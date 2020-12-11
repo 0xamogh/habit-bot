@@ -37,11 +37,7 @@ habit_status_dict = {
         'Mark Complete':1,
         'Completed':2
     }
-r = requests.get(
-"https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % ("motivation", os.environ['TENOR_TOKEN'], 13))
-my_json = json.loads(r.content)
-randomizer = random.randint(0, 10) 
-gif_link = my_json['results'][randomizer]['media'][0]['gif']['url']
+
 
 # Listen for a shortcut invocation
 @app.shortcut("create_habit")
