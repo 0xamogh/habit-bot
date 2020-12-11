@@ -38,7 +38,7 @@ def read_habit(datab, user, habit_text=None):
 
     error_status = False
     if user not in team_data.keys():
-        return {"user_not_found" : True}
+        return None
     if habit_text:
         return team_data[user][habit_text]
     return team_data[user]

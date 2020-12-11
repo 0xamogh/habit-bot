@@ -40,9 +40,18 @@ def handle_delete_habit_button_click(payload, ack, body, client, db, gif_link):
     delete_habit(team_ref, user, habit_text)
     user_data = read_habit(team_ref, user)
 
-    my_payload = generate_habit_payload(
-        user_data['habits'], is_edit_modal=True)
-
+    if 'habits' in user_data.keys():
+        my_payload = generate_habit_payload(
+            user_data['habits'], is_edit_modal=True)
+    else:
+        my_payload = {
+			"type": "section",
+			"text": {
+				"type": "plain_text",
+				"text": "You have no habits left to delete 😢",
+				"emoji": True
+			}
+		}
     client.views_update(
         # Pass a valid trigger_id within 3 seconds of receiving it
         trigger_id=body["trigger_id"],
