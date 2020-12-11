@@ -37,7 +37,7 @@ habit_status_dict = {
         'Mark Complete':1,
         'Completed':2
     }
-
+gif_link = " "
 
 # Listen for a shortcut invocation
 @app.shortcut("create_habit")
