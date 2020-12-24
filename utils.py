@@ -1,5 +1,5 @@
 import os
-
+from datetime import timedelta
 def get_team_info(client):
     response = client.team_info(
         token=os.environ['SLACK_TOKEN']
@@ -7,12 +7,13 @@ def get_team_info(client):
     return response
 
 
-def schedule_message(client, user, unix_timestamp, text):
-    client.chat_scheduleMessage(
-        channel=user,
-        post_at=unix_timestamp,
-        text=text
-    )
+def schedule_message(client, user, scheduled_time, text):
+    for i in range(0,21):
+        client.chat_scheduleMessage(
+            channel=user,
+            post_at=(scheduled_time + timedelta(days=i)).timestamp(),
+            text=text
+        )
 def get_user_timezone(client, user_id):
     user_response = client.users_info(
         token=os.environ['SLACK_TOKEN'],

@@ -5,7 +5,8 @@ import requests
 import random
 import json
 import os
-def build_home_tab_payload(client, db, gif_link, event=None, logger=None, user=None):
+
+def build_home_tab_payload(client, db, gif_link =None , event=None, logger=None, user=None):
     r = requests.get(
         "https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % ("motivation", os.environ['TENOR_TOKEN'], 13))
     my_json = json.loads(r.content)
@@ -37,24 +38,19 @@ def build_home_tab_payload(client, db, gif_link, event=None, logger=None, user=N
                         {
                             "type": "section",
                             "text": {
-                                "type": "plain_text",
-                        				"text": "This is a plain text section block.",
-                                "emoji": True
+				"type": "mrkdwn",
+				"text": "*Lets start a new habit!*"
+                            },
+                            "accessory": {
+				"action_id": "create_habit",
+                "type" : "button",
+				"text" : {
+                    "type" : "plain_text",
+                    "text" : "New Habit"
+                }
                             }
                         },
-                    {
-                            "type": "divider"
-                    },
-                    {
-                            "type": "image",
-                            "title": {
-                                "type": "plain_text",
-                                "text": "A GIF to get you pumped up."
-                            },
-                            "block_id": "image4",
-                            "image_url": gif_link,
-                            "alt_text": "A GIF to get you pumped up 💪"
-                    },
+
 
                     {
                             "type": "header",
@@ -130,6 +126,16 @@ def build_home_tab_payload(client, db, gif_link, event=None, logger=None, user=N
                                     "action_id": "actionId-2"
                                 }
                             ]
+                    },
+                    {
+                            "type": "image",
+                            "title": {
+                                "type": "plain_text",
+                                "text": "A GIF to get you pumped up."
+                            },
+                            "block_id": "image4",
+                            "image_url": gif_link,
+                            "alt_text": "A GIF to get you pumped up 💪"
                     }
                 ]
             })

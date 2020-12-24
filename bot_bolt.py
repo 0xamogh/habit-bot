@@ -44,6 +44,10 @@ gif_link = " "
 def open_modal(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
 
+@app.action("create_habit")
+def open_modal_action(ack, body, client):
+    open_create_habit_modal(ack, body, client, db)
+
 @app.view("view_1")
 def submit_modal(ack, body, client, view):
     submit_create_habit_modal(ack, body, client, view, db)
