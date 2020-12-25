@@ -67,7 +67,7 @@ def open_create_habit_modal(ack, body, client, db):
             ]
         }
     )
-
+ 
 
 def submit_create_habit_modal(ack, body, client, view, db):
     ack()

@@ -75,9 +75,12 @@ def activity_button_click(payload, ack, body, client):
 @app.action("delete_habit")
 def delete_button_click(payload, ack, body, client):
     handle_delete_habit_button_click(payload, ack, body, client, db, gif_link)
+    build_home_tab_payload(client, db, user = body['user']['id'])
+    
 @app.action("give_feedback")
 def feedback_button_click(ack):
 # Start your app
     handle_give_feedback_button_click(ack)
+  
 if __name__ == "__main__":
     app.start(port=int(os.environ.get("PORT", 5000)))

@@ -56,7 +56,7 @@ def build_home_tab_payload(client, db, gif_link =None , event=None, logger=None,
                             "type": "header",
                             "text": {
                                 "type": "plain_text",
-                        				"text": "Your Habits 🎯",
+                        				"text": "Your Tasks 🎯",
                                 "emoji": True
                             }
                     },
