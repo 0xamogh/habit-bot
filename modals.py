@@ -36,6 +36,20 @@ def open_create_habit_modal(ack, body, client, db):
                         "multiline": False
                     }
                 },
+                {"type": "input",
+                 "block_id": "abs_block",
+                 "label": {"type": "plain_text", "text": "Whom do you want to be accountable to?"},
+                 "element": {
+                         "action_id": "accountablity_buddies",
+                         "type": "multi_users_select",
+                     "placeholder": {
+                         "type": "plain_text",
+                         "text": "View your accountablity buddies"
+                     },
+                     "initial_users": abs_list
+                 },
+                 
+                 },
                 {
                     "type": "input",
                     "block_id": "timepicker_block",
@@ -49,21 +63,7 @@ def open_create_habit_modal(ack, body, client, db):
                             "text": "Select a time"
                         }
                     },
-                },
-
-                {"type": "input",
-                 "block_id": "abs_block",
-                 "label": {"type": "plain_text", "text": "Whom do you want to be accountable to?"},
-                 "element": {
-                         "action_id": "accountablity_buddies",
-                         "type": "multi_users_select",
-                     "placeholder": {
-                         "type": "plain_text",
-                         "text": "View your accountablity buddies"
-                     },
-                     "initial_users": abs_list
-                 }
-                 },
+                }
             ]
         }
     )
