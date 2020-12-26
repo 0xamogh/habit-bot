@@ -23,7 +23,7 @@ class WelcomeMessage:
         'text':{
             'type' : 'mrkdwn',
             'text' : (
-                'Hi I am HabitBot \n\n'
+                'Hi I am InhabitBot \n\n'
                 '*Get started by completing tasks*'
             )
         }
@@ -41,7 +41,7 @@ class WelcomeMessage:
         return {
             'ts' : self.timestamp,
             'channel' : self.channel,
-            'username' : 'Welcome HabitBot!',
+            'username' : 'Welcome InhabitBot!',
             'icon_emoji' : self.icon_emoji,
             'blocks' : [
                 self.START_TEXT,

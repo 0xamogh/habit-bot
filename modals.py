@@ -19,7 +19,7 @@ def open_create_habit_modal(ack, body, client, db):
             "type": "modal",
             # View identifier
             "callback_id": "view_1",
-            "title": {"type": "plain_text", "text": "HabitBot"},
+            "title": {"type": "plain_text", "text": "InhabitBot"},
             "submit": {"type": "plain_text", "text": "Submit"},
             "blocks": [
                 {
@@ -156,7 +156,7 @@ def build_delete_habit_payload(ack, body, client, db):
             "type": "modal",
             # View identifier
             "callback_id": "delete_habits_modal",
-            "title": {"type": "plain_text", "text": "HabitBot"},
+            "title": {"type": "plain_text", "text": "InhabitBot"},
             "blocks": [
                 {
                     "type": "section",

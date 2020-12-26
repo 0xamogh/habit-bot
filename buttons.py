@@ -62,7 +62,7 @@ def handle_delete_habit_button_click(payload, ack, body, client, db, gif_link):
             # View identifier
 
             "callback_id": "delete_habits_modal",
-            "title": {"type": "plain_text", "text": "HabitBot"},
+            "title": {"type": "plain_text", "text": "InhabitBot"},
             "blocks": [
                 {
                     "type": "section",
