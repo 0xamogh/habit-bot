@@ -102,7 +102,6 @@ def submit_create_habit_modal(ack, body, client, view, db):
 
     for ab in accountablity_buddies:
         if ab not in intersection:
-
             client.chat_postMessage(
                 channel=ab, text=f"Wohoo! <@{user}> has made you their accountablity buddy. You will now recieve updates regarding their habits")
 
