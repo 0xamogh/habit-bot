@@ -128,7 +128,7 @@ def submit_create_habit_modal(ack, body, client, view, db):
     build_home_tab_payload(client, db, user = user)
     try:
         # Save to DB
-        msg = f"Your submission of {habit_text} was successful"
+        msg = f"Your new habit: {habit_text} was created. You can update your activity progress on the home page."
     except Exception as e:
         # Handle error
         msg = "There was an error with your submission"
@@ -146,22 +146,40 @@ def build_delete_habit_payload(ack, body, client, db):
     user_data = read_habit(team_ref, user)
     my_payload = generate_habit_payload(
         user_data['habits'], is_edit_modal=True)
-
-    client.views_open(
-        # Pass a valid trigger_id within 3 seconds of receiving it
-        trigger_id=body["trigger_id"],
-        # View payload
-        view={
-            "type": "modal",
-            # View identifier
-            "callback_id": "delete_habits_modal",
-            "title": {"type": "plain_text", "text": "InhabitBot"},
-            "blocks": [
-                {
-                    "type": "section",
-                    "text": {"type": "mrkdwn", "text": "Choose habits you want to delete ❌"},
-                },
-                *my_payload
-            ]
-        }
-    )
+    if my_payload:
+        client.views_open(
+            # Pass a valid trigger_id within 3 seconds of receiving it
+            trigger_id=body["trigger_id"],
+            # View payload
+            view={
+                "type": "modal",
+                # View identifier
+                "callback_id": "delete_habits_modal",
+                "title": {"type": "plain_text", "text": "InhabitBot"},
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {"type": "mrkdwn", "text": "Choose habits you want to delete ❌"},
+                    },
+                    *my_payload
+                ]
+            }
+        )
+    else:
+        client.views_open(
+            # Pass a valid trigger_id within 3 seconds of receiving it
+            trigger_id=body["trigger_id"],
+            # View payload
+            view={
+                "type": "modal",
+                # View identifier
+                "callback_id": "delete_habits_modal",
+                "title": {"type": "plain_text", "text": "InhabitBot"},
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {"type": "mrkdwn", "text": "You have no habits left 😢... \n Remember! Start small and *dream big*! Create your new habit now! 🚀 "},
+                    }
+                ]
+            }
+        )
