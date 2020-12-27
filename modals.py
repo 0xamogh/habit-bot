@@ -181,7 +181,15 @@ def build_delete_habit_payload(ack, body, client, db):
                 "blocks": [
                     {
                         "type": "section",
-                        "text": {"type": "mrkdwn", "text": "You have no habits left 😢... \n Remember! Start small and *dream big*! Create your new habit now! 🚀 "},
+                        "text": {"type": "mrkdwn", "text": "You have no habits left 😢 \n Remember! Start small and *dream big*! Start your new habit now! 🚀 "},
+                        "accessory": {
+                            "action_id": "create_habit",
+                            "type": "button",
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": "Create Habit"
+                                }
+                        }
                     }
                 ]
             }
