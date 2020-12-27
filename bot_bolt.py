@@ -48,6 +48,10 @@ def open_modal(ack, body, client):
 def open_modal_action(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
 
+@app.view("create_habit")
+def open_modal_view(ack, body, client):
+    open_create_habit_modal(ack, body, client, db)
+
 @app.view("view_1")
 def submit_modal(ack, body, client, view):
     submit_create_habit_modal(ack, body, client, view, db)

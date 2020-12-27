@@ -19,7 +19,7 @@ def open_create_habit_modal(ack, body, client, db):
             "type": "modal",
             # View identifier
             "callback_id": "view_1",
-            "title": {"type": "plain_text", "text": "HabitBot"},
+            "title": {"type": "plain_text", "text": "InhabitBot"},
             "submit": {"type": "plain_text", "text": "Submit"},
             "blocks": [
                 {
@@ -29,13 +29,27 @@ def open_create_habit_modal(ack, body, client, db):
                 {
                     "type": "input",
                     "block_id": "habit_block",
-                    "label": {"type": "plain_text", "text": "What is the new habit you are looking to build?"},
+                    "label": {"type": "plain_text", "text": "What is a new habit you are looking to build?"},
                     "element": {
                         "type": "plain_text_input",
                         "action_id": "habit_text",
                         "multiline": False
                     }
                 },
+                {"type": "input",
+                 "block_id": "abs_block",
+                 "label": {"type": "plain_text", "text": "Whom do you want to be accountable to?"},
+                 "element": {
+                         "action_id": "accountablity_buddies",
+                         "type": "multi_users_select",
+                     "placeholder": {
+                         "type": "plain_text",
+                         "text": "View your accountablity buddies"
+                     },
+                     "initial_users": abs_list
+                 },
+                 
+                 },
                 {
                     "type": "input",
                     "block_id": "timepicker_block",
@@ -49,21 +63,7 @@ def open_create_habit_modal(ack, body, client, db):
                             "text": "Select a time"
                         }
                     },
-                },
-
-                {"type": "input",
-                 "block_id": "abs_block",
-                 "label": {"type": "plain_text", "text": "Whom do you want to be accountable to?"},
-                 "element": {
-                         "action_id": "accountablity_buddies",
-                         "type": "multi_users_select",
-                     "placeholder": {
-                         "type": "plain_text",
-                         "text": "View your accountablity buddies"
-                     },
-                     "initial_users": abs_list
-                 }
-                 },
+                }
             ]
         }
     )
@@ -102,7 +102,6 @@ def submit_create_habit_modal(ack, body, client, view, db):
 
     for ab in accountablity_buddies:
         if ab not in intersection:
-
             client.chat_postMessage(
                 channel=ab, text=f"Wohoo! <@{user}> has made you their accountablity buddy. You will now recieve updates regarding their habits")
 
@@ -129,7 +128,7 @@ def submit_create_habit_modal(ack, body, client, view, db):
     build_home_tab_payload(client, db, user = user)
     try:
         # Save to DB
-        msg = f"Your submission of {habit_text} was successful"
+        msg = f"Your new habit: {habit_text} was created. You can update your activity progress on the home page."
     except Exception as e:
         # Handle error
         msg = "There was an error with your submission"
@@ -145,24 +144,46 @@ def build_delete_habit_payload(ack, body, client, db):
     team_ref = db.child(team)
 
     user_data = read_habit(team_ref, user)
-    my_payload = generate_habit_payload(
-        user_data['habits'], is_edit_modal=True)
-
-    client.views_open(
-        # Pass a valid trigger_id within 3 seconds of receiving it
-        trigger_id=body["trigger_id"],
-        # View payload
-        view={
-            "type": "modal",
-            # View identifier
-            "callback_id": "delete_habits_modal",
-            "title": {"type": "plain_text", "text": "HabitBot"},
-            "blocks": [
-                {
-                    "type": "section",
-                    "text": {"type": "mrkdwn", "text": "Choose habits you want to delete ❌"},
-                },
-                *my_payload
-            ]
-        }
-    )
+    if 'habits' in user_data.keys():
+        my_payload = generate_habit_payload(
+            user_data['habits'], is_edit_modal=True)
+    else:
+        my_payload = None
+    if my_payload:
+        client.views_open(
+            # Pass a valid trigger_id within 3 seconds of receiving it
+            trigger_id=body["trigger_id"],
+            # View payload
+            view={
+                "type": "modal",
+                # View identifier
+                "callback_id": "delete_habits_modal",
+                "title": {"type": "plain_text", "text": "InhabitBot"},
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {"type": "mrkdwn", "text": "Choose habits you want to delete ❌"},
+                    },
+                    *my_payload
+                ]
+            }
+        )
+    else:
+        client.views_open(
+            # Pass a valid trigger_id within 3 seconds of receiving it
+            trigger_id=body["trigger_id"],
+            # View payload
+            view={
+                "type": "modal",
+                # View identifier
+                "callback_id": "create_habit",
+                "submit": {"type":"plain_text", "text": "Create Habit"},
+                "title": {"type": "plain_text", "text": "InhabitBot"},
+                "blocks": [
+                    {
+                        "type": "section",
+                        "text": {"type": "mrkdwn", "text": "You have no active habits 😢 \n Remember! Start small and *dream big*! Start your new habit now! 🚀 "},
+                    }
+                ]
+            }
+        )

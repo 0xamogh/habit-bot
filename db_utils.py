@@ -74,9 +74,12 @@ def set_habit_status(datab, user, habit_text, habit_status):
 def delete_habit(datab, user, habit_text):
     print("deleting habit", habit_text)
     user_ref = datab.child(user)
-    delete_habit_ref = user_ref.child('habits').child(habit_text)
-    delete_habit_ref.delete()
-
+    user_data = user_ref.get()
+    if 'habits' in user_data.keys():
+        delete_habit_ref = user_ref.child('habits').child(habit_text)
+        delete_habit_ref.delete()
+    else: 
+        return
 def check_if_team_exists(db, team):
     db_data = db.get()
 

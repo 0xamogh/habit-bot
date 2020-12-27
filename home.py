@@ -21,7 +21,19 @@ def build_home_tab_payload(client, db, gif_link =None , event=None, logger=None,
 
     user_data = read_habit(team_ref, user_id)
 
-    my_payload = []
+    my_payload = ['None']
+    placeholder = {
+        "type": "section",
+        "text": {"type": "mrkdwn", "text": "You have no active habits 😢 \n Remember! Start small and *dream big*! Start your new habit now! 🚀 "},
+        "accessory": {
+            "action_id": "create_habit",
+            "type": "button",
+            "text": {
+                "type": "plain_text",
+                "text": "Create Habit"
+            }
+        }
+    }
     if 'habits' in user_data.keys():
         my_payload = generate_habit_payload(user_data['habits'])
     try:
@@ -60,7 +72,7 @@ def build_home_tab_payload(client, db, gif_link =None , event=None, logger=None,
                                 "emoji": True
                             }
                     },
-                    *my_payload,
+                    [*my_payload,placeholder][my_payload == ['None']],
                     {
                             "type": "divider"
                     },
