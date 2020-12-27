@@ -144,8 +144,11 @@ def build_delete_habit_payload(ack, body, client, db):
     team_ref = db.child(team)
 
     user_data = read_habit(team_ref, user)
-    my_payload = generate_habit_payload(
-        user_data['habits'], is_edit_modal=True)
+    if 'habits' in user_data.keys():
+        my_payload = generate_habit_payload(
+            user_data['habits'], is_edit_modal=True)
+    else:
+        my_payload = None
     if my_payload:
         client.views_open(
             # Pass a valid trigger_id within 3 seconds of receiving it
