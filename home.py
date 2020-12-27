@@ -21,10 +21,10 @@ def build_home_tab_payload(client, db, gif_link =None , event=None, logger=None,
 
     user_data = read_habit(team_ref, user_id)
 
-    my_payload = None
+    my_payload = ['None']
     placeholder = {
         "type": "section",
-        "text": {"type": "mrkdwn", "text": "You have no habits left 😢 \n Remember! Start small and *dream big*! Start your new habit now! 🚀 "},
+        "text": {"type": "mrkdwn", "text": "You have no active habits 😢 \n Remember! Start small and *dream big*! Start your new habit now! 🚀 "},
         "accessory": {
             "action_id": "create_habit",
             "type": "button",
@@ -72,7 +72,7 @@ def build_home_tab_payload(client, db, gif_link =None , event=None, logger=None,
                                 "emoji": True
                             }
                     },
-                    *my_payload if my_payload else placeholder,
+                    [*my_payload,placeholder][my_payload == ['None']],
                     {
                             "type": "divider"
                     },

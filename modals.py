@@ -29,7 +29,7 @@ def open_create_habit_modal(ack, body, client, db):
                 {
                     "type": "input",
                     "block_id": "habit_block",
-                    "label": {"type": "plain_text", "text": "What is the new habit you are looking to build?"},
+                    "label": {"type": "plain_text", "text": "What is a new habit you are looking to build?"},
                     "element": {
                         "type": "plain_text_input",
                         "action_id": "habit_text",
@@ -176,20 +176,13 @@ def build_delete_habit_payload(ack, body, client, db):
             view={
                 "type": "modal",
                 # View identifier
-                "callback_id": "delete_habits_modal",
+                "callback_id": "create_habit",
+                "submit": {"type":"plain_text", "text": "Create Habit"},
                 "title": {"type": "plain_text", "text": "InhabitBot"},
                 "blocks": [
                     {
                         "type": "section",
-                        "text": {"type": "mrkdwn", "text": "You have no habits left 😢 \n Remember! Start small and *dream big*! Start your new habit now! 🚀 "},
-                        "accessory": {
-                            "action_id": "create_habit",
-                            "type": "button",
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": "Create Habit"
-                                }
-                        }
+                        "text": {"type": "mrkdwn", "text": "You have no active habits 😢 \n Remember! Start small and *dream big*! Start your new habit now! 🚀 "},
                     }
                 ]
             }
