@@ -15,14 +15,33 @@ import pytz
 import time
 import requests
 import random
+from slack_bolt.oauth.oauth_settings import OAuthSettings
+from slack_sdk.oauth.installation_store import FileInstallationStore
+from slack_sdk.oauth.state_store import FileOAuthStateStore
 
 env_path = Path('.')/'.env'
 load_dotenv(dotenv_path=env_path)
-# Initializes your app with your bot token and signing secret
-app = App(
-    token=os.environ['SLACK_TOKEN'],
-    signing_secret=os.environ['SIGNING_SECRET']
+
+oauth_settings = OAuthSettings(
+    client_id=os.environ["SLACK_CLIENT_ID"],
+    client_secret=os.environ["SLACK_CLIENT_SECRET"],
+    scopes=["channels:read", "groups:read", "chat:write", "app_mentions:read", "channels:history", "chat:write", "chat:write.customize", "commands", "im:history", "im:read", "im:write", "reminders:read", "reminders:write", "team:read", "users.profile:read", "users:read"],
+    installation_store=FileInstallationStore(base_dir="./data"),
+    state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data"),
+    install_path="/slack/install",
+    redirect_uri_path="/slack/oauth_redirect",
 )
+
+app = App(
+    signing_secret=os.environ["SIGNING_SECRET"],
+    oauth_settings=oauth_settings
+)
+
+# Initializes your app with your bot token and signing secret
+# app = App(
+#     token=os.environ['BOT_USER_TOKEN'],
+#     signing_secret=os.environ['SIGNING_SECRET']
+# )
 cd = credentials.Certificate(
     "habitbotdb-297416-firebase-adminsdk-kn9zk-b63e8c9960.json")
 
