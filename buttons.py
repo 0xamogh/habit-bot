@@ -87,7 +87,7 @@ def handle_delete_habit_button_click(payload, ack, body, client, db, gif_link):
         )
 
     scheduled_message_list = client.chat_scheduledMessages_list(
-        token=os.environ['SLACK_TOKEN'],
+        token=os.environ['BOT_USER_TOKEN'],
     )
 
     # update_home_tab(client=client, user=user)
@@ -95,7 +95,7 @@ def handle_delete_habit_button_click(payload, ack, body, client, db, gif_link):
     for message in scheduled_message_list['scheduled_messages']:
         if message['text'] == habit_text:
             client.chat_deleteScheduledMessage(
-                token=os.environ['SLACK_TOKEN'],
+                token=os.environ['BOT_USER_TOKEN'],
                 channel=user,
                 scheduled_message_id=message['id'],
             )
