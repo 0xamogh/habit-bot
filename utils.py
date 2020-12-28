@@ -2,7 +2,7 @@ import os
 from datetime import timedelta
 def get_team_info(client):
     response = client.team_info(
-        token=os.environ['BOT_USER_TOKEN']
+        token=os.environ['OAUTH_ACCESS_TOKEN']
     )
     return response
 
@@ -16,7 +16,7 @@ def schedule_message(client, user, scheduled_time, text):
         )
 def get_user_timezone(client, user_id):
     user_response = client.users_info(
-        token=os.environ['BOT_USER_TOKEN'],
+        token=os.environ['OAUTH_ACCESS_TOKEN'],
         user=user_id
     )
     return user_response['user']['tz']
