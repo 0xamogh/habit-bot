@@ -19,8 +19,8 @@ from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_sdk.oauth.installation_store import FileInstallationStore
 from slack_sdk.oauth.state_store import FileOAuthStateStore
 
-env_path = Path('.')/'.env'
-load_dotenv(dotenv_path=env_path)
+# env_path = Path('.')/'.env'
+# load_dotenv(dotenv_path=env_path)
 
 oauth_settings = OAuthSettings(
     client_id=os.environ["SLACK_CLIENT_ID"],
