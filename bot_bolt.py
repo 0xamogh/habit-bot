@@ -19,8 +19,8 @@ from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_sdk.oauth.installation_store import FileInstallationStore
 from slack_sdk.oauth.state_store import FileOAuthStateStore
 
-env_path = Path('.')/'.env'
-load_dotenv(dotenv_path=env_path)
+# env_path = Path('.')/'.env'
+# load_dotenv(dotenv_path=env_path)
 
 oauth_settings = OAuthSettings(
     client_id=os.environ["SLACK_CLIENT_ID"],
@@ -28,8 +28,6 @@ oauth_settings = OAuthSettings(
     scopes=["channels:read", "groups:read", "chat:write", "app_mentions:read", "channels:history", "chat:write", "chat:write.customize", "commands", "im:history", "im:read", "im:write", "reminders:read", "reminders:write", "team:read", "users.profile:read", "users:read"],
     installation_store=FileInstallationStore(base_dir="./data"),
     state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data"),
-    install_path="/slack/install",
-    redirect_uri_path="/slack/oauth_redirect",
 )
 
 app = App(
