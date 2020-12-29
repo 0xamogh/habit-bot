@@ -1,8 +1,13 @@
 import os
+from slack_sdk.errors import SlackApiError
+from slack_sdk.signature import SignatureVerifier
+signing_secret = os.environ["SIGNING_SECRET"]
+signature_verifier = SignatureVerifier(signing_secret=signing_secret)
+
 from datetime import timedelta
 def get_team_info(client):
     response = client.team_info(
-        token=os.environ['SLACK_BOT_TOKEN']
+        # token=os.environ['SLACK_BOT_TOKEN']
     )
     return response
 
@@ -16,7 +21,7 @@ def schedule_message(client, user, scheduled_time, text):
         )
 def get_user_timezone(client, user_id):
     user_response = client.users_info(
-        token=os.environ['SLACK_BOT_TOKEN'],
+        # token=os.environ['SLACK_BOT_TOKEN'],
         user=user_id
     )
     return user_response['user']['tz']
