@@ -1,0 +1,2 @@
+from bot_bolt import refresh_habit_schedule
+refresh_habit_schedule()

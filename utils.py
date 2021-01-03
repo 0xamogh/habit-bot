@@ -5,6 +5,8 @@ signing_secret = os.environ["SIGNING_SECRET"]
 signature_verifier = SignatureVerifier(signing_secret=signing_secret)
 
 from datetime import timedelta
+from time import sleep
+
 def get_team_info(client):
     response = client.team_info(
         # token=os.environ['SLACK_BOT_TOKEN']
@@ -13,12 +15,14 @@ def get_team_info(client):
 
 
 def schedule_message(client, user, scheduled_time, text):
-    for i in range(0,21):
-        client.chat_scheduleMessage(
-            channel=user,
-            post_at=(scheduled_time + timedelta(days=i)).timestamp(),
-            text=text
-        )
+    i = 0
+    # for i in range(0,1):
+        # sleep(20)
+    client.chat_scheduleMessage(
+        channel=user,
+        post_at=(scheduled_time + timedelta(days=i)).timestamp(),
+        text="Reminder to complete your activity : {text}"
+    )
 def get_user_timezone(client, user_id):
     user_response = client.users_info(
         # token=os.environ['SLACK_BOT_TOKEN'],

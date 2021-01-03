@@ -6,7 +6,8 @@ import random
 import json
 import os
 
-def build_home_tab_payload(client, db, gif_link =None , event=None, logger=None, user=None):
+
+def build_home_tab_payload(client, db, gif_link=None, event=None, logger=None, user=None):
     r = requests.get(
         "https://api.tenor.com/v1/search?q=%s&key=%s&limit=%s" % ("motivation", os.environ['TENOR_TOKEN'], 13))
     my_json = json.loads(r.content)
@@ -21,7 +22,7 @@ def build_home_tab_payload(client, db, gif_link =None , event=None, logger=None,
 
     user_data = read_habit(team_ref, user_id)
 
-    my_payload = ['None']
+    my_payload = []
     placeholder = {
         "type": "section",
         "text": {"type": "mrkdwn", "text": "You have no active habits 😢 \n Remember! Start small and *dream big*! Start your new habit now! 🚀 "},
@@ -55,11 +56,11 @@ def build_home_tab_payload(client, db, gif_link =None , event=None, logger=None,
                             },
                             "accessory": {
 				"action_id": "create_habit",
-                "type" : "button",
-				"text" : {
-                    "type" : "plain_text",
-                    "text" : "New Habit"
-                }
+                                "type": "button",
+				"text": {
+                                    "type": "plain_text",
+                                    "text": "New Habit"
+                                }
                             }
                         },
 
@@ -72,7 +73,7 @@ def build_home_tab_payload(client, db, gif_link =None , event=None, logger=None,
                                 "emoji": True
                             }
                     },
-                    [*my_payload,placeholder][my_payload == ['None']],
+                    *my_payload,
                     {
                             "type": "divider"
                     },

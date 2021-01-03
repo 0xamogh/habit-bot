@@ -1,8 +1,10 @@
 import firebase_admin
+import pytz
+from datetime import datetime, timedelta
 from firebase_admin import credentials, firestore, db
 cd = credentials.Certificate("habitbotdb-297416-firebase-adminsdk-kn9zk-b63e8c9960.json")
 
-def create_habit(datab, team, user, habit_text, reminder_time, abs_list):
+def create_habit(datab, team, user, habit_text, reminder_time, abs_list, timezone):
 
     team_data = datab.get()
     error_status = False
@@ -17,6 +19,7 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list):
                         "reminder_time" : reminder_time,
                         "habit_status" : 0
                     },
+                "timezone": timezone
                 }
             }
 
@@ -28,7 +31,8 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list):
         datab.update(
             {
                 f"{user}/habits": habits,
-                f"{user}/abs": abs_list
+                f"{user}/abs": abs_list,
+                f"{user}/timezone":timezone
             }
         )
         abs_list = team_data[user]['abs']
@@ -85,3 +89,27 @@ def check_if_team_exists(db, team):
 
     if team not in db_data.keys():
         db.update({team: {"temp_key": "0"}})
+
+def refresh_habit_status(datab):
+    data = datab.get()
+    for team in data.keys():
+        if team != "temp_key":
+
+            team_data = data[team]
+
+            for user in team_data.keys():
+                # user_ref = team_ref.child(user)
+                if user != "temp_key":
+                    user_data = team_data[user]
+
+                    tz = None
+                    if "timezone" in user_data.keys():
+                        tz = user_data["timezone"]
+                        local = pytz.timezone(tz)
+                        user_time_now = datetime.now().astimezone(local)
+                        if user_time_now.hour >= 23:
+                            if "habits" in user_data.keys():
+                                for habit in user_data['habits'].keys():
+
+                                    user_data['habits'][habit]['habit_status'] = 0
+    datab.update(data)

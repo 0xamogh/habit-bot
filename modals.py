@@ -1,7 +1,7 @@
 from db_utils import read_abs_list, check_if_team_exists, create_habit, read_habit
-from datetime import datetime, timedelta
 from utils import get_user_timezone, schedule_message, generate_habit_payload
 from home import build_home_tab_payload
+from datetime import datetime, timedelta
 import pytz
 def open_create_habit_modal(ack, body, client, db):
     # Acknowledge the command request
@@ -108,17 +108,13 @@ def submit_create_habit_modal(ack, body, client, view, db):
     tz = get_user_timezone(client, user)
     local = pytz.timezone(tz)
     user_time_now = datetime.now().astimezone(local)
+    # print(user_time_now.time())
     scheduled_time = user_time_now.replace(
         hour=reminder_hour, minute=reminder_minutes)
 
-    if user_time_now.hour < reminder_hour or (user_time_now.hour == reminder_hour and user_time_now.minute < reminder_minutes):
-        schedule_message(client, user, scheduled_time, habit_text)
-    else:
-        schedule_message(client, user, scheduled_time +
-                                        timedelta(days=1), habit_text)
 
     create_habit(team_ref, team, user, habit_text, reminder_time,
-                 accountablity_buddies)
+                 accountablity_buddies, tz)
     # Acknowledge the view_submission event and close the modal
     # Do whatever you want with the input data - here we're saving it to a DB
     # then sending the user a verification of their submission
@@ -136,6 +132,11 @@ def submit_create_habit_modal(ack, body, client, view, db):
         # Message the user
         client.chat_postMessage(channel=user, text=msg)
 
+    if user_time_now.hour < reminder_hour or (user_time_now.hour == reminder_hour and user_time_now.minute < reminder_minutes):
+        schedule_message(client, user, scheduled_time, habit_text)
+    else:
+        schedule_message(client, user, scheduled_time +
+                                        timedelta(days=1), habit_text)
 
 def build_delete_habit_payload(ack, body, client, db):
     ack()

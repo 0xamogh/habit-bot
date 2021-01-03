@@ -4,7 +4,7 @@ import os
 from slack_bolt import App
 import firebase_admin
 from firebase_admin import credentials, firestore, db
-from db_utils import create_habit, read_habit, delete_habit, check_if_team_exists, set_habit_status, read_abs_list, update_abs_list
+from db_utils import create_habit, read_habit, delete_habit, check_if_team_exists, set_habit_status, read_abs_list, update_abs_list, refresh_habit_status
 from utils import get_team_info, get_user_timezone, generate_habit_payload
 from modals import open_create_habit_modal, submit_create_habit_modal, build_delete_habit_payload
 from buttons import handle_delete_habit_button_click, handle_activity_button_click, handle_give_feedback_button_click
@@ -102,6 +102,9 @@ def delete_button_click(payload, ack, body, client):
 def feedback_button_click(ack):
 # Start your app
     handle_give_feedback_button_click(ack)
-  
+
+def refresh_habit_schedule():
+    refresh_habit_status(db)
+
 if __name__ == "__main__":
     app.start(port=int(os.environ.get("PORT", 5000)))
