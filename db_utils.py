@@ -2,6 +2,7 @@ import firebase_admin
 import pytz
 from datetime import datetime, timedelta
 from firebase_admin import credentials, firestore, db
+from utils import schedule_message
 cd = credentials.Certificate("habitbotdb-297416-firebase-adminsdk-kn9zk-b63e8c9960.json")
 
 def create_habit(datab, team, user, habit_text, reminder_time, abs_list, timezone):
@@ -90,7 +91,7 @@ def check_if_team_exists(db, team):
     if team not in db_data.keys():
         db.update({team: {"temp_key": "0"}})
 
-def refresh_habit_status(datab):
+def refresh_habit_status(client, datab):
     data = datab.get()
     for team in data.keys():
         if team != "temp_key":
@@ -110,6 +111,14 @@ def refresh_habit_status(datab):
                         if user_time_now.hour >= 23:
                             if "habits" in user_data.keys():
                                 for habit in user_data['habits'].keys():
-
+                                    reminder_time = user_data['habits'][habit]['reminder_time']
+                                    reminder_hour, reminder_minutes = reminder_time.split(":")
+                                    reminder_hour, reminder_minutes = int(reminder_hour), int(reminder_minutes)     
+                                    scheduled_time = user_time_now.replace(hour=reminder_hour, minute=reminder_minutes)
                                     user_data['habits'][habit]['habit_status'] = 0
+                                    if user_time_now.hour < reminder_hour or (user_time_now.hour == reminder_hour and user_time_now.minute < reminder_minutes):
+                                        schedule_message(client, user, scheduled_time, habit)
+                                    else:
+                                        schedule_message(client, user, scheduled_time +
+                                                        timedelta(days=1), habit)
     datab.update(data)

@@ -104,7 +104,7 @@ def feedback_button_click(ack):
     handle_give_feedback_button_click(ack)
 
 def refresh_habit_schedule():
-    refresh_habit_status(db)
+    refresh_habit_status(app.client, db)
 
 if __name__ == "__main__":
     app.start(port=int(os.environ.get("PORT", 5000)))

@@ -109,8 +109,7 @@ def submit_create_habit_modal(ack, body, client, view, db):
     local = pytz.timezone(tz)
     user_time_now = datetime.now().astimezone(local)
     # print(user_time_now.time())
-    scheduled_time = user_time_now.replace(
-        hour=reminder_hour, minute=reminder_minutes)
+    scheduled_time = user_time_now.replace(hour=reminder_hour, minute=reminder_minutes)
 
 
     create_habit(team_ref, team, user, habit_text, reminder_time,
