@@ -36,7 +36,7 @@ def generate_habit_payload(habits, is_edit_modal=False):
     payload = []
     style_arr = []
     for habit_name in habit_names:
-        # print(habit_name)
+        print(type(habit_name), habit_name)
         payload.append({
             "type": "section",
             "text": {
