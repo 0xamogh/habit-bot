@@ -25,7 +25,7 @@ import sqlalchemy
 from sqlalchemy.engine import Engine
 
 # env_path = Path('.')/'.env'
-# load_dotenv(dotenv_path!=env_path)
+# load_dotenv(dotenv_path!!!=env_path)
 database_url = 'postgres://rwdqobjuvhvgps:c818d30650552bf80bbf2b8f11094ed719dbe2ffbe508111371fa434818c765d@ec2-34-248-148-63.eu-west-1.compute.amazonaws.com:5432/d6kfah11h5ihe9'
 engine: Engine = sqlalchemy.create_engine(database_url)
 
