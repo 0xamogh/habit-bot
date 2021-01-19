@@ -1,3 +1,6 @@
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 from dotenv import load_dotenv
 from pathlib import Path
 import os
@@ -16,20 +19,42 @@ import time
 import requests
 import random
 from slack_bolt.oauth.oauth_settings import OAuthSettings
-from slack_sdk.oauth.installation_store import FileInstallationStore
-from slack_sdk.oauth.state_store import FileOAuthStateStore
+from slack_sdk.oauth.installation_store.sqlalchemy import SQLAlchemyInstallationStore
+from slack_sdk.oauth.state_store.sqlalchemy import SQLAlchemyOAuthStateStore
+import sqlalchemy
+from sqlalchemy.engine import Engine
 
 # env_path = Path('.')/'.env'
 # load_dotenv(dotenv_path=env_path)
+database_url = 'postgres: // rwdqobjuvhvgps: c818d30650552bf80bbf2b8f11094ed719dbe2ffbe508111371fa434818c765d@ec2-34-248-148-63.eu-west-1.compute.amazonaws.com: 5432/d6kfah11h5ihe9'
+engine: Engine = sqlalchemy.create_engine(database_url)
+
+logger = logging.getLogger(__name__)
+installation_store = SQLAlchemyInstallationStore(
+    client_id=os.environ["SLACK_CLIENT_ID"],
+    engine=engine,
+    logger=logger,
+)
+
+oauth_state_store = SQLAlchemyOAuthStateStore(
+    expiration_seconds=120,
+    engine=engine,
+    logger=logger,
+)
 
 oauth_settings = OAuthSettings(
     client_id=os.environ["SLACK_CLIENT_ID"],
     client_secret=os.environ["SLACK_CLIENT_SECRET"],
     scopes=["channels:read", "groups:read", "chat:write", "app_mentions:read", "channels:history", "chat:write", "chat:write.customize", "commands", "im:history", "im:read", "im:write", "reminders:read", "reminders:write", "team:read", "users.profile:read", "users:read"],
-    installation_store=FileInstallationStore(base_dir="./data"),
-    state_store=FileOAuthStateStore(expiration_seconds=600, base_dir="./data"),
+    installation_store=installation_store,
+    state_store=oauth_state_store
 )
-
+try:
+    engine.execute("select count(*) from slack_bots")
+except Exception as e:
+    installation_store.metadata.create_all(engine)
+    oauth_state_store.metadata.create_all(engine)
+    
 app = App(
     signing_secret=os.environ["SIGNING_SECRET"],
     oauth_settings=oauth_settings
