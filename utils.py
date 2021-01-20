@@ -41,20 +41,20 @@ def generate_habit_payload(habits, is_edit_modal=False):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": habit_name if habits[habit_name]['habit_status'] == 0 else (f"*{habit_name}*" if habits[habit_name]['habit_status'] == 1 else f"✔ ~{habit_name}~")
+                "text": habit_name if habits[habit_name].habit_status == 0 else (f"*{habit_name}*" if habits[habit_name].habit_status == 1 else f"✔ ~{habit_name}~")
             },
             "accessory": {
                 "type": "button",
                 "text": {
                     "type": "plain_text",
-                    "text": 'Delete' if is_edit_modal else ('Start Activity' if habits[habit_name]['habit_status'] == 0 else ('Mark Complete' if habits[habit_name]['habit_status'] == 1 else 'Completed'))
+                    "text": 'Delete' if is_edit_modal else ('Start Activity' if habits[habit_name].habit_status == 0 else ('Mark Complete' if habits[habit_name].habit_status == 1 else 'Completed'))
                 },
-                "value": habit_name + "#*#" + str(habits[habit_name]['habit_status']),
+                "value": habit_name + "#*#" + str(habits[habit_name].habit_status),
                 "action_id": "delete_habit" if is_edit_modal else "activity_button"
             }
         })
-        if is_edit_modal or habits[habit_name]['habit_status'] == 0:
+        if is_edit_modal or habits[habit_name].habit_status == 0:
             payload[-1]['accessory'].update({"style": "danger" if is_edit_modal else (
-                "primary" if habits[habit_name]['habit_status'] == 0 else None)})
+                "primary" if habits[habit_name].habit_status == 0 else None)})
 
     return payload
