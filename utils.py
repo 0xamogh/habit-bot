@@ -32,6 +32,7 @@ def get_user_timezone(client, user_id):
 
 
 def generate_habit_payload(habits, is_edit_modal=False):
+    print("These are the habits", habits)
     habit_names = list(habits.keys())
     payload = []
     style_arr = []
