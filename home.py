@@ -35,7 +35,7 @@ def build_home_tab_payload(client, db, gif_link=None, event=None, logger=None, u
             }
         }
     }
-    if 'habits' in user_data.keys():
+    if user_data and 'habits' in user_data.keys():
         my_payload = generate_habit_payload(user_data['habits'])
     try:
         # Call views.publish with the built-in client
