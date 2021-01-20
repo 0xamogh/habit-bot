@@ -39,6 +39,7 @@ def generate_habit_payload(habits, is_edit_modal=False):
     for habit_name in habit_names:
         print(type(habits[habit_name]), habits[habit_name])
         current_habit = habits[habit_name]
+        
         payload.append({
             "type": "section",
             "text": {

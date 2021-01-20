@@ -20,8 +20,9 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list, timezon
                         "reminder_time" : reminder_time,
                         "habit_status" : 0
                     },
+                },
                 "timezone": timezone
-                }
+
             }
 
         })
