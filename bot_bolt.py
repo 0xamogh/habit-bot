@@ -81,11 +81,9 @@ habit_status_dict = {
     }
 gif_link = " "
 
-# Listen for a shortcut invocation
-
 @app.message("new habit")
 def reply(message, say):
-    say("message recieve bruvv")
+    say("message recieve bruvv", channel = message['user'])
 
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
