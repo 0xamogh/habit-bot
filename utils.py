@@ -14,13 +14,13 @@ def get_team_info(client):
     return response
 
 
-def schedule_message(client, user, scheduled_time, text):
+def schedule_message(client, user, scheduled_time, text, auto = False):
     i = 0
 
     client.chat_scheduleMessage(
         channel=user,
         post_at=(scheduled_time + timedelta(days=i)).timestamp(),
-        text=f"Reminder to complete your activity : {text}"
+        text= text if auto else f"Reminder to complete your activity : {text}"
     )
 def get_user_timezone(client, user_id):
     user_response = client.users_info(
