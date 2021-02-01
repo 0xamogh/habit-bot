@@ -81,9 +81,9 @@ habit_status_dict = {
     }
 gif_link = " "
 
-@app.event("message.app_home")
+@message.app_home((hi")
 def reply(ack, body, say):
-    # print(message)
+    print(body)
     say("message recieve bruvv", channel = message['user'])
 
 @app.shortcut("create_habit")
