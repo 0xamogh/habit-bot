@@ -16,8 +16,8 @@ def get_team_info(client):
 
 def schedule_message(client, user, scheduled_time, text):
     i = 0
-    # for i in range(0,1):
-        # sleep(20)
+
+
     client.chat_scheduleMessage(
         channel=user,
         post_at=(scheduled_time + timedelta(days=i)).timestamp(),

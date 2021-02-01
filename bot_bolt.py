@@ -82,6 +82,10 @@ habit_status_dict = {
 gif_link = " "
 
 # Listen for a shortcut invocation
+
+@app.message("new habit")
+def reply(client, message):
+    print("message recieve bruvv")
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
@@ -97,7 +101,6 @@ def open_modal_view(ack, body, client):
 @app.view("view_1")
 def submit_modal(ack, body, client, view):
     submit_create_habit_modal(ack, body, client, view, db)
-
 
 @app.event("app_home_opened")
 def open_home_tab(client, event = None, logger = None, user = None):

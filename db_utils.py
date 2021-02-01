@@ -103,7 +103,7 @@ def refresh_habit_status(client, datab):
                 # user_ref = team_ref.child(user)
                 if user != "temp_key":
                     user_data = data[team][user]
-
+                    print(user)
                     tz = None
                     if "timezone" in data[team][user].keys():
                         tz = data[team][user]["timezone"]
