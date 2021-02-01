@@ -102,26 +102,22 @@ def refresh_habit_status(client, datab):
             for user in team_data.keys():
                 # user_ref = team_ref.child(user)
                 if user != "temp_key":
-                    user_data = team_data[user]
+                    user_data = data[team][user]
 
                     tz = None
-                    if "timezone" in user_data.keys():
-                        tz = user_data["timezone"]
+                    if "timezone" in data[team][user].keys():
+                        tz = data[team][user]["timezone"]
                         local = pytz.timezone(tz)
                         user_time_now = datetime.now().astimezone(local)
-                        # if user_time_now.hour >= 23:
-                        if "habits" in user_data.keys():
-                            for habit in user_data['habits'].keys():
-                                reminder_time = user_data['habits'][habit]['reminder_time']
+
+                        if "habits" in data[team][user].keys():
+                            for habit in data[team][user]['habits'].keys():
+                                reminder_time = data[team][user]['habits'][habit]['reminder_time']
                                 reminder_hour, reminder_minutes = reminder_time.split(":")
                                 reminder_hour, reminder_minutes = int(reminder_hour), int(reminder_minutes)     
                                 scheduled_time = user_time_now.replace(hour=reminder_hour, minute=reminder_minutes)
-                                user_data['habits'][habit]['habit_status'] = 0
-                                datab.update(
-                                    {
-                                        f"{user}/habits": user_data['habits'],
-                                    }
-                                )
+                                data[team][user]['habits'][habit]['habit_status'] = 0
+                                
                                 try :
                                     if user_time_now.hour < reminder_hour or (user_time_now.hour == reminder_hour and user_time_now.minute < reminder_minutes):
                                         schedule_message(client, user, scheduled_time, habit)
@@ -130,4 +126,5 @@ def refresh_habit_status(client, datab):
                                                         timedelta(days=1), habit)
                                 except:
                                     print("Slack error")
+                            
     datab.update(data)
