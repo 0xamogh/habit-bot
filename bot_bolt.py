@@ -83,9 +83,10 @@ gif_link = " "
 
 
 @app.event("message_app_home")
-def reply(event, say):
-    # print(message)
-    say("message recieve bruvv", channel = event['user'])
+def reply(ack, body, client):
+    ack()
+    print(body)
+    # say("message recieve bruvv", channel = event['user'])
 
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
