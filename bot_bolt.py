@@ -88,6 +88,10 @@ def reply(ack, body, client):
     print(body)
     # say("message recieve bruvv", channel = event['user'])
 
+@app.message("new habit")
+def reply2(message, say):
+    print("message bod", message)
+    say("message recieved")
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
