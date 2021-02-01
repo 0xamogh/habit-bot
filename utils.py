@@ -21,7 +21,7 @@ def schedule_message(client, user, scheduled_time, text):
     client.chat_scheduleMessage(
         channel=user,
         post_at=(scheduled_time + timedelta(days=i)).timestamp(),
-        text="Reminder to complete your activity : {text}"
+        text=f"Reminder to complete your activity : {text}"
     )
 def get_user_timezone(client, user_id):
     user_response = client.users_info(
