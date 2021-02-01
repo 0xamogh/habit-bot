@@ -84,8 +84,9 @@ gif_link = " "
 # Listen for a shortcut invocation
 
 @app.message("new habit")
-def reply(client, message):
-    print("message recieve bruvv")
+def reply(message, say):
+    say("message recieve bruvv")
+
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
