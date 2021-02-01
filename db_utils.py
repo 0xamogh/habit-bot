@@ -96,7 +96,6 @@ def refresh_habit_status(client, datab):
     data = datab.get()
     for team in data.keys():
         if team != "temp_key":
-
             team_data = data[team]
 
             for user in team_data.keys():

@@ -8,7 +8,7 @@ from slack_bolt import App
 import firebase_admin
 from firebase_admin import credentials, firestore, db
 from db_utils import create_habit, read_habit, delete_habit, check_if_team_exists, set_habit_status, read_abs_list, update_abs_list, refresh_habit_status
-from utils import get_team_info, get_user_timezone, generate_habit_payload
+from utils import get_team_info, get_user_timezone, generate_habit_payload, schedule_message
 from modals import open_create_habit_modal, submit_create_habit_modal, build_delete_habit_payload
 from buttons import handle_delete_habit_button_click, handle_activity_button_click, handle_give_feedback_button_click
 from home import build_home_tab_payload
@@ -82,16 +82,13 @@ habit_status_dict = {
 gif_link = " "
 
 
-# @app.event("message")
-# def reply(ack, body, client):
-#     ack()
-#     print(body)
-#     # say("message recieve bruvv", channel = event['user'])
-
-@app.message("new habit")
-def reply2(message, say):
-    print("message bod", message)
-    say("message recieved")
+@app.message("Reminder to complete your activity :")
+def reply(client, message):
+    timestamp = message['ts']
+    text = message['text']
+    user = message['user']
+    schedule_message(client, user, timestamp + timedelta(minutes=1), text)
+    print("##################### All done boii")
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
