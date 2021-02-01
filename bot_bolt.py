@@ -82,11 +82,11 @@ habit_status_dict = {
 gif_link = " "
 
 
-@app.event("message")
-def reply(ack, body, client):
-    ack()
-    print(body)
-    # say("message recieve bruvv", channel = event['user'])
+# @app.event("message")
+# def reply(ack, body, client):
+#     ack()
+#     print(body)
+#     # say("message recieve bruvv", channel = event['user'])
 
 @app.message("new habit")
 def reply2(message, say):
