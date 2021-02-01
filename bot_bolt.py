@@ -102,7 +102,7 @@ def submit_modal(ack, body, client, view):
 @app.event("app_home_opened")
 def open_home_tab(client, event = None, logger = None, user = None):
     build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
-
+    refresh_habit_status(client, db)
 @app.action("open_delete_habits")
 def open_delete_habit_modal(ack, body, client):
     build_delete_habit_payload(ack, body, client, db)
