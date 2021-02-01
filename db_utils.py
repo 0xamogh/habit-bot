@@ -122,9 +122,12 @@ def refresh_habit_status(client, datab):
                                         f"{user}/habits": user_data['habits'],
                                     }
                                 )
-                                if user_time_now.hour < reminder_hour or (user_time_now.hour == reminder_hour and user_time_now.minute < reminder_minutes):
-                                    schedule_message(client, user, scheduled_time, habit)
-                                else:
-                                    schedule_message(client, user, scheduled_time +
-                                                    timedelta(days=1), habit)
+                                try :
+                                    if user_time_now.hour < reminder_hour or (user_time_now.hour == reminder_hour and user_time_now.minute < reminder_minutes):
+                                        schedule_message(client, user, scheduled_time, habit)
+                                    else:
+                                        schedule_message(client, user, scheduled_time +
+                                                        timedelta(days=1), habit)
+                                except:
+                                    print("Slack error")
     datab.update(data)
