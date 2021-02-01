@@ -82,7 +82,7 @@ habit_status_dict = {
 gif_link = " "
 
 
-@app.event("message_app_home")
+@app.event("message")
 def reply(ack, body, client):
     ack()
     print(body)
