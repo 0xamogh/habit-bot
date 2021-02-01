@@ -84,7 +84,7 @@ gif_link = " "
 
 @app.message("complete")
 def reply(client, message):
-    timestamp = message['ts']
+    timestamp = datetime.fromtimestamp(int(message['ts']))
     text = message['text']
     user = message['user']
     schedule_message(client, user, timestamp + timedelta(minutes=1), text)
