@@ -82,7 +82,7 @@ habit_status_dict = {
 gif_link = " "
 
 
-@app.message("reminder to complete")
+@app.message("complete")
 def reply(client, message):
     timestamp = message['ts']
     text = message['text']
