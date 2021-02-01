@@ -117,6 +117,11 @@ def refresh_habit_status(client, datab):
                                 reminder_hour, reminder_minutes = int(reminder_hour), int(reminder_minutes)     
                                 scheduled_time = user_time_now.replace(hour=reminder_hour, minute=reminder_minutes)
                                 user_data['habits'][habit]['habit_status'] = 0
+                                datab.update(
+                                    {
+                                        f"{user}/habits": user_data['habits'],
+                                    }
+                                )
                                 if user_time_now.hour < reminder_hour or (user_time_now.hour == reminder_hour and user_time_now.minute < reminder_minutes):
                                     schedule_message(client, user, scheduled_time, habit)
                                 else:
