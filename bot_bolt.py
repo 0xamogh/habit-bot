@@ -86,10 +86,10 @@ gif_link = " "
 def reply(client, message):
     print("message", message)
     text = message['text']
-    if "Reminder to complete your activity" in text and :
-    timestamp = datetime.fromtimestamp(float(message['ts']))
-    user = message['user']
-    schedule_message(client, user, timestamp + timedelta(days=1), text, auto = True)
+    if "Reminder to complete your activity" in text:
+        timestamp = datetime.fromtimestamp(float(message['ts']))
+        user = message['user']
+        schedule_message(client, user, timestamp + timedelta(days=1), text, auto = True)
 
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
