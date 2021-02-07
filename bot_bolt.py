@@ -89,7 +89,7 @@ def reply(client, message):
     if "Reminder to complete your activity" in text and message['channel_type'] == "im":
         timestamp = datetime.fromtimestamp(float(message['ts']))
         user = message['user']
-        schedule_message(client, user, timestamp + timedelta(seconds=40), text, auto = True)
+        schedule_message(client, 'D01FXDSCKPE', timestamp + timedelta(seconds=40), text, auto = True)
 
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
