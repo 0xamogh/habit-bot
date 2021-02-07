@@ -81,13 +81,8 @@ habit_status_dict = {
     }
 gif_link = " "
 
-# Listener middleware which filters out messages with "bot_message" subtype
-def no_bot_messages(message, next):
-    subtype = message.get("subtype")
-    if subtype == "bot_message":
-       next()
 
-@app.event(event="message", middleware=[no_bot_messages])
+@app.message("complete")
 def reply(client, message):
     print("message", message)
     text = message['text']
