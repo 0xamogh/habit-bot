@@ -217,7 +217,7 @@ sentencepiece==0.1.85
 six==1.15.0
 sklearn==0.0
 slack==0.0.2
--e git+https://github.com/amogh-jrules/bolt-python.git@a1643de7ef8e04ec04f3c13adcee8f9f2627048a#egg=slack_bolt
+-e git+https://github.com/amogh-jrules/bolt-python.git@b829c5d4c688faadd02f2136dc4f4299cc5baa5b#egg=slack_bolt
 slack-sdk==3.3.0
 slackclient==2.9.3
 slackeventsapi==2.2.1

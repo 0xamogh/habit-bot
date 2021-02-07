@@ -1,4 +1,4 @@
--e git+https://github.com/amogh-jrules/bolt-python.git@a1643de7ef8e04ec04f3c13adcee8f9f2627048a#egg=slack_bolt
+-e git+https://github.com/amogh-jrules/bolt-python.git@b829c5d4c688faadd02f2136dc4f4299cc5baa5b#egg=slack_bolt
 pytz==2019.1
 pathlib==1.0.1
 python-dotenv==0.15.0
