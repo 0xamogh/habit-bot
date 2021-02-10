@@ -20,6 +20,7 @@ import pytz
 import time
 import requests
 import random
+import asyncio
 from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_sdk.oauth.installation_store.sqlalchemy import SQLAlchemyInstallationStore
 from slack_sdk.oauth.state_store.sqlalchemy import SQLAlchemyOAuthStateStore
@@ -121,9 +122,9 @@ def submit_modal(ack, body, client, view):
     submit_create_habit_modal(ack, body, client, view, db)
 
 @app.event("app_home_opened")
-def open_home_tab(client, event = None, logger = None, user = None):
+async def open_home_tab(client, event = None, logger = None, user = None):
     build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
-    check_stat = read_habit(db, event['user'])
+    check_stat = await read_habit(db, event['user'])
     print(check_stat)
     if check_stat.user_not_found:
         client.chat_postMessage(
