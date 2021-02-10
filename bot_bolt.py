@@ -84,8 +84,8 @@ habit_status_dict = {
     }
 gif_link = " "
 
-# bot_id = app.client.bots_info()['bot']['id']
-# print("bot_id", bot_id)
+bot_id = app.client.auth_test['user_id']
+print("bot_id", bot_id)
 
 @app.message("complete")
 def reply(client, message):
