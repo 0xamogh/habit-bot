@@ -84,7 +84,9 @@ habit_status_dict = {
     }
 gif_link = " "
 
-bot_id = app.client.auth_test()['user_id']
+bot_id = app.client.auth_test(
+    token=os.environ['SLACK_BOT_TOKEN']
+)['user_id']
 print("bot_id", bot_id)
 
 @app.message("complete")
