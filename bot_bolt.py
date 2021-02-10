@@ -84,6 +84,8 @@ habit_status_dict = {
     }
 gif_link = " "
 
+bot_id = app.client.bots_info['bot']['id']
+print("bot_id", bot_id)
 
 @app.message("complete")
 def reply(client, message):
@@ -94,6 +96,12 @@ def reply(client, message):
         channel = message['channel']
         schedule_message(client, channel, timestamp + timedelta(days=1), text, auto=True)
 
+
+@app.message("['hi','hey','hello,'heylo']")
+def reply_greeting(message, say):
+    user = message['user']
+    if user != bot_id:
+        say("Hey there! Ready for some good habits 🥰")
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
