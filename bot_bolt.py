@@ -1,4 +1,6 @@
 import logging
+
+from sqlalchemy.sql.expression import text
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 from dotenv import load_dotenv
@@ -96,8 +98,12 @@ def open_modal(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
 
 @app.shortcut("help")
-def open_modal(ack, body, client):
-    open_create_habit_modal(ack, body, client, db)
+def request_help(ack, body, client):
+    ack()
+    client.chat_postMessage(
+        channel=body['user'],
+        text="**Inhabit Bot Guide**\n- Create a new habit- Use the shortcut /create a habit or head on over to Home to create a new habit- Add your habit, set a daily reminder and choose your accountability buddies- Update Habit status- In Home, you can mark the status of your habits as Doing and Done, this will alert your accountability buddies regarding your updates- Delete a habit- In Home, you can click the "Delete Habits" to show a modal to delete your habits"
+    )
 
 
 @app.action("create_habit")
