@@ -84,10 +84,10 @@ habit_status_dict = {
     }
 gif_link = " "
 
-bot_id = app.client.auth_test(
-    token=os.environ['SLACK_BOT_TOKEN']
-)['user_id']
-print("bot_id", bot_id)
+# bot_id = app.client.auth_test(
+#     token=os.environ[]
+# )['user_id']
+# print("bot_id", bot_id)
 
 @app.message("complete")
 def reply(client, message):
@@ -102,6 +102,7 @@ def reply(client, message):
 @app.message("['hi','hey','hello,'heylo']")
 def reply_greeting(message, say):
     user = message['user']
+    print(message)
     # say("Hey there! Ready for some good habits 🥰")
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
