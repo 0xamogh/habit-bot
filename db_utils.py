@@ -42,7 +42,6 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list, timezon
 def read_habit(datab, user, habit_text=None):
     team_data = datab.get()
 
-    error_status = False
     if user not in team_data.keys():
         return {"user_not_found": True}
     if habit_text:
@@ -52,7 +51,6 @@ def read_habit(datab, user, habit_text=None):
 def read_abs_list(datab, user):
     team_data = datab.get()
 
-    error_status = False
     if user not in team_data.keys():
         return []
     elif 'abs' in team_data[user].keys():
