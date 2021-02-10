@@ -44,10 +44,11 @@ def read_habit(datab, user, habit_text=None):
 
     error_status = False
     if user not in team_data.keys():
-        return None
+        return {"user_not_found": True}
     if habit_text:
         return team_data[user][habit_text]
     return team_data[user]
+
 def read_abs_list(datab, user):
     team_data = datab.get()
 

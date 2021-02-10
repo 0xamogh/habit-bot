@@ -95,6 +95,11 @@ def reply(client, message):
 def open_modal(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
 
+@app.shortcut("help")
+def open_modal(ack, body, client):
+    open_create_habit_modal(ack, body, client, db)
+
+
 @app.action("create_habit")
 def open_modal_action(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
@@ -110,6 +115,12 @@ def submit_modal(ack, body, client, view):
 @app.event("app_home_opened")
 def open_home_tab(client, event = None, logger = None, user = None):
     build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
+    check_stat = read_habit(db, event['user'])
+    if check_stat.user_not_found:
+        client.chat_postMessage(
+            channel = event['user'],
+            text = "Welcome to Inhabit! To start create a new habit and choose your accountablity buddy on the Home Page"
+        )
 
 @app.action("open_delete_habits")
 def open_delete_habit_modal(ack, body, client):
