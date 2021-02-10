@@ -100,7 +100,7 @@ def reply(client, message):
 @app.message("['hi','hey','hello,'heylo']")
 def reply_greeting(message, say):
     user = message['user']
-    say("Hey there! Ready for some good habits 🥰")
+    # say("Hey there! Ready for some good habits 🥰")
 @app.shortcut("create_habit")
 def open_modal(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
