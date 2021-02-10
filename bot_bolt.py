@@ -97,7 +97,8 @@ def reply(client, message):
 def open_modal(ack, body, client):
     open_create_habit_modal(ack, body, client, db)
 
-@app.shortcut("help")
+
+@app.shortcut("help_requested")
 def request_help(ack, body, client):
     ack()
     print("body:", body)
