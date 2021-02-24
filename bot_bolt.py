@@ -133,7 +133,6 @@ def submit_modal(ack, body, client, view):
 
 @app.event("app_home_opened")
 async def open_home_tab(client, event = None, logger = None, user = None):
-    build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
     check_stat = read_habit(db, event['user'])
     print("check_stat", check_stat)
     if check_stat.user_not_found:
@@ -141,6 +140,7 @@ async def open_home_tab(client, event = None, logger = None, user = None):
             channel = event['user'],
             text = "Welcome to Inhabit! To start create a new habit and choose your accountablity buddy on the Home Page"
         )
+    build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
 
 @app.action("open_delete_habits")
 def open_delete_habit_modal(ack, body, client):
