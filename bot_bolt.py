@@ -115,7 +115,7 @@ def request_help(ack, body, client):
     print("body:", body)
     client.chat_postMessage(
         channel=body['user']['id'],
-        text="*Inhabit Bot Guide*\n *Create a new habit*\n Use the shortcut /create a habit or head on over to Home to create a new habit\n Add your habit, set a daily reminder and choose your accountability buddies\n*Update Habit status*\n In Home, you can mark the status of your habits as Doing and Done, this will alert your accountability buddies regarding your updates\n*Delete a habit*\n In Home, you can click the \"Delete Habits\" to show a modal to delete your habits"
+        text="*Things you can do with Inhabit Bot 🎉🍾🎊*\n *Create a new habit*\n Use the shortcut /create a habit or head on over to Home to create a new habit\n Add your habit, set a daily reminder and choose your accountability buddies\n*Update Habit status*\n In Home, you can mark the status of your habits as Doing and Done, this will alert your accountability buddies regarding your updates\n*Delete a habit*\n In Home, you can click the \"Delete Habits\" to show a modal to delete your habits"
     )
 
 
@@ -133,14 +133,14 @@ def submit_modal(ack, body, client, view):
 
 @app.event("app_home_opened")
 async def open_home_tab(client, event = None, logger = None, user = None):
+    build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
     check_stat = read_habit(db, event['user'])
     print("check_stat", check_stat)
-    if check_stat.user_not_found:
+    if check_stat.user_not_found or True:
         client.chat_postMessage(
             channel = event['user'],
             text = "Welcome to Inhabit! To start create a new habit and choose your accountablity buddy on the Home Page"
         )
-    build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
 
 @app.action("open_delete_habits")
 def open_delete_habit_modal(ack, body, client):
