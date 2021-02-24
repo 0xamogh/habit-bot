@@ -135,6 +135,11 @@ def open_home_tab(client, event = None, logger = None, user = None):
             channel = event['user'],
             text = "Welcome to Inhabit! To start create a new habit and choose your accountablity buddy on the Home Page"
         );
+        db.update({
+            user: {
+                "temp_key" : 0}
+
+        });
 
 @app.action("open_delete_habits")
 def open_delete_habit_modal(ack, body, client):
