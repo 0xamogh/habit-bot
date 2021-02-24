@@ -136,7 +136,7 @@ def open_home_tab(client, event = None, logger = None, user = None):
             text = "Welcome to Inhabit! To start create a new habit and choose your accountablity buddy on the Home Page"
         );
         db.update({
-            user: {
+            event['user']: {
                 "temp_key" : 0}
 
         });
