@@ -3,24 +3,17 @@ import logging
 from sqlalchemy.sql.expression import text
 logging.basicConfig(level=logging.DEBUG)
 logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
-from dotenv import load_dotenv
-from pathlib import Path
 import os
 from slack_bolt import App
 import firebase_admin
-from firebase_admin import credentials, firestore, db
-from db_utils import create_habit, read_habit, delete_habit, check_if_team_exists, set_habit_status, read_abs_list, update_abs_list, refresh_habit_status
-from utils import get_team_info, get_user_timezone, generate_habit_payload, schedule_message
+from firebase_admin import credentials, db
+from db_utils import read_habit, update_abs_list, refresh_habit_status
+from utils import schedule_message
 from modals import open_create_habit_modal, submit_create_habit_modal, build_delete_habit_payload
 from buttons import handle_delete_habit_button_click, handle_activity_button_click, handle_give_feedback_button_click
 from home import build_home_tab_payload
 from datetime import datetime, timedelta
-import json
-import pytz
-import time
-import requests
-import random
-import asyncio
+
 from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_sdk.oauth.installation_store.sqlalchemy import SQLAlchemyInstallationStore
 from slack_sdk.oauth.state_store.sqlalchemy import SQLAlchemyOAuthStateStore
@@ -133,6 +126,7 @@ def submit_modal(ack, body, client, view):
 
 @app.event("app_home_opened")
 async def open_home_tab(client, event = None, logger = None, user = None):
+    print("opening home ....")
     build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
     check_stat = read_habit(db, event['user'])
     print("check_stat", check_stat)
@@ -140,7 +134,7 @@ async def open_home_tab(client, event = None, logger = None, user = None):
         client.chat_postMessage(
             channel = event['user'],
             text = "Welcome to Inhabit! To start create a new habit and choose your accountablity buddy on the Home Page"
-        )
+        );
 
 @app.action("open_delete_habits")
 def open_delete_habit_modal(ack, body, client):
