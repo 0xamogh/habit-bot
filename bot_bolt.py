@@ -130,7 +130,7 @@ def open_home_tab(client, event = None, logger = None, user = None):
     build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
     check_stat = read_habit(db, event['user'])
     print("check_stat", check_stat)
-    if check_stat.user_not_found or True:
+    if check_stat['user_not_found']:
         client.chat_postMessage(
             channel = event['user'],
             text = "Welcome to Inhabit! To start create a new habit and choose your accountablity buddy on the Home Page"
