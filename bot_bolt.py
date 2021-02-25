@@ -125,11 +125,12 @@ def submit_modal(ack, body, client, view):
     submit_create_habit_modal(ack, body, client, view, db)
 
 @app.event("app_home_opened")
-def open_home_tab(client, event = None, logger = None, user = None):
+def open_home_tab(client, body, event = None, logger = None, user = None):
     print("opening home ....")
     build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
     check_stat = read_habit(db, event['user'])
     print("check_stat", check_stat)
+    print("body", body)
     if check_stat['user_not_found']:
         client.chat_postMessage(
             channel = event['user'],
