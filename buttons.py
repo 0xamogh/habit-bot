@@ -93,7 +93,7 @@ def handle_delete_habit_button_click(payload, ack, body, client, db, gif_link):
     # update_home_tab(client=client, user=user)
     # print(scheduled_message_list['scheduled_messages'])
     for message in scheduled_message_list['scheduled_messages']:
-        if message['text'] == habit_text:
+        if message['text'] == f"Reminder to complete your activity : {habit_text}":
             client.chat_deleteScheduledMessage(
                 # token=os.environ['SLACK_BOT_TOKEN'],
                 channel=user,
