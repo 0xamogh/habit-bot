@@ -91,6 +91,18 @@ def check_if_team_exists(db, team):
     if team not in db_data.keys():
         db.update({team: {"temp_key": "0"}})
 
+def check_if_user_exists(db, user):
+    db_data = db.get()
+
+    if user not in db_data.keys():
+        db.update({
+            user: {
+                "temp_key": 0}
+        })
+        return False
+    else:
+        return True
+
 def refresh_habit_status(client, datab):
     data = datab.get()
     for team in data.keys():

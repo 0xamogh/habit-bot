@@ -7,7 +7,7 @@ import os
 from slack_bolt import App
 import firebase_admin
 from firebase_admin import credentials, db
-from db_utils import read_habit, update_abs_list, refresh_habit_status
+from db_utils import check_if_user_exists, update_abs_list, refresh_habit_status
 from utils import schedule_message
 from modals import open_create_habit_modal, submit_create_habit_modal, build_delete_habit_payload
 from buttons import handle_delete_habit_button_click, handle_activity_button_click, handle_give_feedback_button_click
@@ -125,23 +125,19 @@ def submit_modal(ack, body, client, view):
     submit_create_habit_modal(ack, body, client, view, db)
 
 @app.event("app_home_opened")
-def open_home_tab(client, body, event = None, logger = None, user = None):
+def open_home_tab(client, event = None, logger = None, user = None):
     print("opening home ....")
     build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
     validation_ref = db.child('app_home')
-    check_stat = read_habit(validation_ref, event['user'])
+    user_present = check_if_user_exists(validation_ref, event['user'])
     print("check_stat", check_stat)
 
-    if check_stat['user_not_found']:
+    if not user_present:
         client.chat_postMessage(
             channel = event['user'],
             text = "Welcome to Inhabit! To start create a new habit and choose your accountablity buddy on the Home Page"
         );
-        validation_ref.update({
-            event['user']: {
-                "temp_key" : 0}
-
-        });
+        
 
 @app.action("open_delete_habits")
 def open_delete_habit_modal(ack, body, client):
