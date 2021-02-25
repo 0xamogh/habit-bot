@@ -128,15 +128,16 @@ def submit_modal(ack, body, client, view):
 def open_home_tab(client, body, event = None, logger = None, user = None):
     print("opening home ....")
     build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
-    check_stat = read_habit(db, event['user'])
+    validation_ref = db.child('app_home')
+    check_stat = read_habit(validation_ref, event['user'])
     print("check_stat", check_stat)
-    print("body", body)
+
     if check_stat['user_not_found']:
         client.chat_postMessage(
             channel = event['user'],
             text = "Welcome to Inhabit! To start create a new habit and choose your accountablity buddy on the Home Page"
         );
-        db.update({
+        validation_ref.update({
             event['user']: {
                 "temp_key" : 0}
 
