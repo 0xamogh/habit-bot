@@ -18,7 +18,7 @@ def handle_share_streak(ack, db, body, client):
         for habit in user_data['habits']:
             my_max = max(user_data['habits'][habit]['streak'], my_max)
     client.chat_postMessage(
-        channel = "general",
+        channel = "#general",
         text= f"<@{user}> has a max streak of {my_max} 🔥🔥🔥"
     )
 def handle_give_feedback_button_click(ack):
