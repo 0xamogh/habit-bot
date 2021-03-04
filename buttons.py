@@ -11,16 +11,25 @@ def handle_share_streak(ack, db, body, client):
     team_ref = db.child(team)
     user_data = read_habit(team_ref, user)
     my_max = 0
+    current_max_habit = ""
     if not user_data:
         return 
     else:
         
         for habit in user_data['habits']:
-            my_max = max(user_data['habits'][habit]['streak'], my_max)
-    client.chat_postMessage(
-        channel = "#general",
-        text= f"<@{user}> has a max streak of {my_max} 🔥🔥🔥"
-    )
+            if my_max < user_data['habits'][habit]['streak']:
+                my_max = max(user_data['habits'][habit]['streak'], my_max)
+                current_max_habit = habit
+    if my_max > 0:
+        client.chat_postMessage(
+            channel = "#general",
+            text= f"<@{user}> has a been doing \"{current_max_habit}\" with a streak of {my_max} 🔥🔥🔥"
+        )
+    else:
+        client.chat_postMessage(
+            channel=user,
+            text="You dont have any streaks to share right now, start following your habits now!"
+        )
 def handle_give_feedback_button_click(ack):
     ack()
 
@@ -36,7 +45,8 @@ def handle_activity_button_click(payload, ack, body, client, db, gif_link):
     ack()
     if not abs_list:
         client.chat_postMessage(
-            channel=user, text="You have not selected anybody to track your habits with, please do so on the home page"
+            channel=user, 
+            text="You have not selected anybody to track your habits with, please do so on the home page"
         )
         return
     set_habit_status(team_ref, user, habit_text, habit_status)
