@@ -10,7 +10,7 @@ from firebase_admin import credentials, db
 from db_utils import check_if_user_exists, update_abs_list, refresh_habit_status
 from utils import schedule_message
 from modals import open_create_habit_modal, submit_create_habit_modal, build_delete_habit_payload
-from buttons import handle_delete_habit_button_click, handle_activity_button_click, handle_give_feedback_button_click
+from buttons import handle_share_streak, handle_delete_habit_button_click, handle_activity_button_click, handle_give_feedback_button_click
 from home import build_home_tab_payload
 from datetime import datetime, timedelta
 
@@ -168,7 +168,7 @@ def feedback_button_click(ack):
 @app.action("share_streak")
 def share_streak(ack, body, client):
     # Start your app
-    share_streak(ack, db, body, client)
+    handle_share_streak(ack, db, body, client)
 
 def refresh_habit_schedule():
     print(app, app.client)
