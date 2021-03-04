@@ -130,7 +130,7 @@ def open_home_tab(client, event = None, logger = None, user = None):
     build_home_tab_payload(client, db, gif_link, event, logger=None, user=None)
     validation_ref = db.child('app_home')
     user_present = check_if_user_exists(validation_ref, event['user'])
-    print("check_stat", check_stat)
+    # print("check_stat", check_stat)
 
     if not user_present:
         client.chat_postMessage(
