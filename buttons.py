@@ -1,9 +1,26 @@
-from db_utils import read_habit, delete_habit, set_habit_status, read_abs_list
+from utils import get_team_info
+from db_utils import check_if_team_exists, read_habit, delete_habit, set_habit_status, read_abs_list
 from utils import generate_habit_payload
 from home import build_home_tab_payload
 import os
 
-
+def handle_share_streak(ack, db, body, client):
+    ack()
+    user = body['user']['id']
+    team = body['team']['domain']
+    team_ref = db.child(team)
+    user_data = read_habit(team_ref, user)
+    my_max = 0
+    if not user_data:
+        return 
+    else:
+        
+        for habit in user_data['habits']:
+            my_max = max(user_data['habits'][habit]['streak'], my_max)
+    client.chat_postMessage(
+        channel = "general",
+        text= f"<@{user}> has a max streak of {my_max} 🔥🔥🔥"
+    )
 def handle_give_feedback_button_click(ack):
     ack()
 
@@ -29,6 +46,7 @@ def handle_activity_button_click(payload, ack, body, client, db, gif_link):
             client.chat_postMessage(
                 channel=accountablity_buddy, text=f"<@{user}> has started {habit_text}. Time to get going! 🏃🏽‍♂️")
         elif habit_status == 1:
+            
             client.chat_postMessage(
                 channel=accountablity_buddy, text=f"<@{user}> has finished {habit_text}. Come on, Giddy up! 🏇🏽")
 

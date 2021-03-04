@@ -164,6 +164,12 @@ def feedback_button_click(ack):
 # Start your app
     handle_give_feedback_button_click(ack)
 
+
+@app.action("share_streak")
+def share_streak(ack, body, client):
+    # Start your app
+    share_streak(ack, db, body, client)
+
 def refresh_habit_schedule():
     print(app, app.client)
     refresh_habit_status(app.client, db)

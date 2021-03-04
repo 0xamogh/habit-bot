@@ -70,7 +70,10 @@ def set_habit_status(datab, user, habit_text, habit_status):
     if habit_text:
         habits = team_data[user]['habits']
 
-        habits[habit_text]['habit_status'] = int((habit_status+1)%3)
+        stat = int((habit_status+1)%3)
+        habits[habit_text]['habit_status'] = stat
+        if stat == 2:
+            habits[habit_text]['streak'] = habits[habit_text]['streak'] + 1
         datab.update(
             {
                 f"{user}/habits": habits,

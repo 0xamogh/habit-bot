@@ -129,6 +129,16 @@ def build_home_tab_payload(client, db, gif_link=None, event=None, logger=None, u
                                     },
                                     "url": "https://s.surveyplanet.com/zjLl_ruv9",
                                     "action_id": "give_feedback"
+                                },
+                                {
+                                    "type": "button",
+                                    "text": {
+                                        "type": "plain_text",
+                                      						"text": "Share Streak",
+                                        "emoji": True
+                                    },
+                                    "value" : "share_streak",
+                                    "action_id": "share_streak"
                                 }
                             ]
                     },
