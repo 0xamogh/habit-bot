@@ -35,7 +35,8 @@ def create_habit(datab, team, user, habit_text, reminder_time, abs_list, timezon
             {
                 f"{user}/habits": habits,
                 f"{user}/abs": abs_list,
-                f"{user}/timezone":timezone
+                f"{user}/timezone":timezone,
+                f"{user}/streak": 0
             }
         )
         abs_list = team_data[user]['abs']
