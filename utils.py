@@ -43,7 +43,7 @@ def generate_habit_payload(habits, is_edit_modal=False):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"*{habit_name}*" if current_habit['habit_status'] else f"✅ ~{habit_name}~")
+                "text": (f"*{habit_name}*" if current_habit['habit_status'] else f"✅ ~{habit_name}~")
             },
             "accessory": {
                 "type": "button",
