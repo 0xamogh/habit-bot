@@ -54,11 +54,11 @@ def handle_activity_button_click(payload, ack, body, client, db, gif_link):
     for accountablity_buddy in abs_list:
         if habit_status == 0:
             client.chat_postMessage(
-                channel=accountablity_buddy, text=f"<@{user}> has started {habit_text}. Time to get going! 🏃🏽‍♂️")
-        elif habit_status == 1:
+                channel=accountablity_buddy, text=f"<@{user}> has completed {habit_text}. Time to get going! 🏃🏽‍♂️")
             
-            client.chat_postMessage(
-                channel=accountablity_buddy, text=f"<@{user}> has finished {habit_text}. Come on, Giddy up! 🏇🏽")
+        # elif habit_status == 1:
+        #     client.chat_postMessage(
+        #         channel=accountablity_buddy, text=f"<@{user}> has finished {habit_text}. Come on, Giddy up! 🏇🏽")
 
 
 def handle_delete_habit_button_click(payload, ack, body, client, db, gif_link):

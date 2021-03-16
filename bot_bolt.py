@@ -71,9 +71,8 @@ firebase_admin.initialize_app(
 )
 db = db.reference('staging/')
 habit_status_dict = {
-        'Start Activity':0,
-        'Mark Complete':1,
-        'Completed':2
+    'Mark Complete': 0,
+        'Completed':1
     }
 gif_link = " "
 
