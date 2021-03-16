@@ -43,13 +43,13 @@ def generate_habit_payload(habits, is_edit_modal=False):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": (f"*{habit_name}*" if current_habit['habit_status'] else f"✅ ~{habit_name}~")
+                "text": (f"*{habit_name}*" if current_habit['habit_status']==0 else f"✅ ~{habit_name}~")
             },
             "accessory": {
                 "type": "button",
                 "text": {
                     "type": "plain_text",
-                    "text": 'Delete' if is_edit_modal else ('rk Complete' if current_habit['habit_status'] == 0 else 'Completed')
+                    "text": 'Delete' if is_edit_modal else ('Mark Complete' if current_habit['habit_status'] == 0 else 'Completed')
                 },
                 "value": habit_name + "#*#" + str(current_habit['habit_status']),
                 "action_id": "delete_habit" if is_edit_modal else "activity_button"
